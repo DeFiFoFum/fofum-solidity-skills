@@ -1,0 +1,23 @@
+{
+  "name": "fofum-skills",
+  "owner": {
+    "name": "DeFiFofum",
+    "url": "https://github.com/defifofum"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Claude Code plugins for DeFi security, smart contract auditing, and Solidity development"
+  },
+  "plugins": [
+    {
+      "name": "solidity-audit",
+      "version": "0.1.0",
+      "description": "Comprehensive Solidity smart contract security audit skill. 100% markdown, no executable code. Combines methodologies from Trail of Bits, Code4rena, Sherlock, Cyfrin, and SlowMist.",
+      "author": {
+        "name": "DeFiFofum",
+        "url": "https://github.com/defifofum"
+      },
+      "source": "./plugins/solidity-audit"
+    }
+  ]
+}

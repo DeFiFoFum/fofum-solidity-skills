@@ -1,0 +1,17 @@
+{
+  "name": "fofum-solidity-audit-skill",
+  "version": "0.1.0",
+  "description": "Comprehensive Solidity smart contract security audit skill with exploit patterns, protocol-specific checklists, and structured methodology.",
+  "author": "defifofum",
+  "repository": "https://github.com/defifofum/fofum-solidity-audit-skill",
+  "license": "MIT",
+  "keywords": [
+    "solidity",
+    "security",
+    "audit",
+    "smart-contracts",
+    "defi",
+    "evm",
+    "vulnerabilities"
+  ]
+}

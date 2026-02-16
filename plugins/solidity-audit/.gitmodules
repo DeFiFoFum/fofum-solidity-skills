@@ -1,0 +1,7 @@
+[submodule "submodules/DeFiHackLabs"]
+	path = submodules/DeFiHackLabs
+	url = https://github.com/SunWeb3Sec/DeFiHackLabs.git
+
+[submodule "submodules/learn-evm-attacks"]
+	path = submodules/learn-evm-attacks
+	url = https://github.com/coinspect/learn-evm-attacks.git

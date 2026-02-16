@@ -1,0 +1,31 @@
+{
+  "name": "fofum-solidity-audit-skill",
+  "version": "0.1.0",
+  "description": "Comprehensive Solidity smart contract security audit skill for Claude Code",
+  "author": "defifofum",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/defifofum/fofum-solidity-audit-skill"
+  },
+  "keywords": [
+    "solidity",
+    "security",
+    "audit",
+    "smart-contracts",
+    "defi",
+    "evm",
+    "claude-code",
+    "claude-code-plugin"
+  ],
+  "scripts": {
+    "setup": "make setup",
+    "update": "make update-all",
+    "update:tob": "make update-tob",
+    "update:hacks": "make update-hacks",
+    "update:attacks": "make update-attacks",
+    "index": "python scripts/build-index.py",
+    "search": "python scripts/search-exploits.py",
+    "status": "make status"
+  }
+}
