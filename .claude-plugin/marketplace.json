@@ -1,24 +1,22 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "fofum-solidity-skills",
+  "description": "Claude Code skills for Solidity smart contract development, deployment, and security auditing",
   "owner": {
-    "name": "DeFiFofum",
-    "url": "https://github.com/defifofum"
-  },
-  "metadata": {
-    "version": "1.0.0",
-    "description": "Claude Code skills for Solidity smart contract development, deployment, and security auditing"
+    "name": "DeFiFoFum",
+    "email": "github@defifofum.com"
   },
   "plugins": [
     {
       "name": "solidity-audit",
-      "version": "0.1.0",
       "description": "Comprehensive smart contract security audit skill. Multi-agent architecture, 100+ item checklist, real exploit references. 100% markdown, zero supply chain risk.",
+      "version": "0.1.0",
       "author": {
-        "name": "DeFiFofum",
-        "url": "https://github.com/defifofum"
+        "name": "DeFiFoFum"
       },
       "source": "./plugins/solidity-audit",
-      "tags": ["security", "audit", "defi", "smart-contracts"]
+      "category": "security",
+      "homepage": "https://github.com/DeFiFoFum/fofum-solidity-skills/tree/main/plugins/solidity-audit"
     }
   ]
 }
