@@ -10,7 +10,7 @@
     {
       "name": "solidity-audit",
       "description": "Comprehensive smart contract security audit skill. Multi-agent architecture, 100+ item checklist, real exploit references. 100% markdown, zero supply chain risk.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "DeFiFoFum"
       },

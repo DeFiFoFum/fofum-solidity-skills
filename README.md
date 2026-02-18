@@ -12,6 +12,9 @@
 
 # 2. Install the audit plugin
 /plugin install solidity-audit@fofum-solidity-skills
+
+# 3. Validate your setup
+/validate
 ```
 
 Or run `/plugin` → **Discover** tab → browse and install.
@@ -26,6 +29,7 @@ The `solidity-audit` plugin gives Claude:
 - **5 exploit references** — Real patterns from $3.4B+ in hacks
 - **5 protocol guides** — Lending, AMM, staking, governance, bridges
 - **Professional report template** — Ready for client delivery
+- **`/validate` command** — Check your setup has recommended tools
 
 ## Usage
 
@@ -68,10 +72,10 @@ See [fofum-solidity-evals](https://github.com/DeFiFoFum/fofum-solidity-evals) fo
 
 ## Philosophy
 
-- **100% Markdown** — No executable code, no npm install, no hooks. Just reference files.
+- **100% Markdown** — No executable code, no npm install, no hooks, no submodules.
 - **Zero Supply Chain Risk** — Safe to use on production codebases.
 - **Battle-Tested** — Methodologies from the best audit firms.
-- **Real Examples** — Learn from actual DeFi exploits via git submodules.
+- **Self-Contained** — All knowledge embedded in markdown files.
 
 ## Resources Included
 
@@ -89,10 +93,19 @@ See [fofum-solidity-evals](https://github.com/DeFiFoFum/fofum-solidity-evals) fo
 - Governance mechanisms
 - Cross-chain bridges
 
-### Submodules
+### External Learning Resources
+For hands-on exploit reproduction, we recommend:
 - [DeFiHackLabs](https://github.com/SunWeb3Sec/DeFiHackLabs) — 300+ exploit reproductions
 - [learn-evm-attacks](https://github.com/coinspect/learn-evm-attacks) — Categorized with diagrams
 - [building-secure-contracts](https://github.com/crytic/building-secure-contracts) — Trail of Bits guides
+
+## Updating
+
+To get the latest version:
+```
+/plugin marketplace update fofum-solidity-skills
+/plugin install solidity-audit@fofum-solidity-skills
+```
 
 ## Contributing
 

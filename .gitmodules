@@ -1,9 +1,0 @@
-[submodule "plugins/solidity-audit/submodules/DeFiHackLabs"]
-	path = plugins/solidity-audit/submodules/DeFiHackLabs
-	url = https://github.com/SunWeb3Sec/DeFiHackLabs.git
-[submodule "plugins/solidity-audit/submodules/learn-evm-attacks"]
-	path = plugins/solidity-audit/submodules/learn-evm-attacks
-	url = https://github.com/coinspect/learn-evm-attacks.git
-[submodule "plugins/solidity-audit/submodules/building-secure-contracts"]
-	path = plugins/solidity-audit/submodules/building-secure-contracts
-	url = https://github.com/crytic/building-secure-contracts.git
