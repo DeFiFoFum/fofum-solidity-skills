@@ -1,6 +1,62 @@
 # Fofum Solidity Skills
 
-Claude Code skills for Solidity smart contract development, deployment, and security auditing.
+> **Claude Code skills for Solidity smart contract security auditing**
+
+100% markdown, zero supply chain risk. Battle-tested against [$3.4B+ in real exploits](https://github.com/DeFiFoFum/fofum-solidity-evals).
+
+## Quick Start
+
+```bash
+# 1. Add the marketplace
+/plugin marketplace add DeFiFoFum/fofum-solidity-skills
+
+# 2. Install the audit plugin
+/plugin install solidity-audit@fofum-solidity-skills
+```
+
+Or run `/plugin` → **Discover** tab → browse and install.
+
+## What You Get
+
+The `solidity-audit` plugin gives Claude:
+
+- **5-phase audit methodology** — Combines Trail of Bits, Code4rena, Sherlock, Cyfrin, SlowMist
+- **100+ item checklist** — With SWC IDs and severity guidance
+- **6 specialized agents** — Reentrancy, oracle, access control, flash loan, upgradeability, gas
+- **5 exploit references** — Real patterns from $3.4B+ in hacks
+- **5 protocol guides** — Lending, AMM, staking, governance, bridges
+- **Professional report template** — Ready for client delivery
+
+## Usage
+
+Once installed, just ask Claude to audit your contracts:
+
+```
+Audit the contracts in src/
+```
+
+```
+Review this contract for security vulnerabilities: [paste code]
+```
+
+```
+Run a full security audit on this DeFi protocol
+```
+
+Claude automatically uses the skill's methodology, checklists, and agents.
+
+## Eval Results
+
+Tested against 22 real-world exploits:
+
+```
+✅ RECALL:           100.0% (22/22 known bugs found)
+🎁 EXTRA FINDINGS:   19 (bonus issues discovered)
+❌ FALSE POSITIVES:  0
+📊 OVERALL GRADE:    A+
+```
+
+See [fofum-solidity-evals](https://github.com/DeFiFoFum/fofum-solidity-evals) for methodology and benchmarks.
 
 ## Plugins
 
@@ -10,38 +66,37 @@ Claude Code skills for Solidity smart contract development, deployment, and secu
 | solidity-dev | Smart contract development | 🔜 Coming |
 | solidity-deploy | Deployment & verification | 🔜 Coming |
 
-## Installation
-
-```bash
-# Install a specific plugin
-claude plugin add defifofum/fofum-solidity-skills/solidity-audit
-
-# Or browse available plugins
-claude plugin search fofum
-```
-
 ## Philosophy
 
-- **100% Markdown** — No executable code, no supply chain risk
-- **Focused Plugins** — Each plugin does one thing well
-- **Battle-Tested** — Built on methodologies from Trail of Bits, Code4rena, Sherlock, Cyfrin
-- **Real Examples** — Learn from actual DeFi exploits and patterns
+- **100% Markdown** — No executable code, no npm install, no hooks. Just reference files.
+- **Zero Supply Chain Risk** — Safe to use on production codebases.
+- **Battle-Tested** — Methodologies from the best audit firms.
+- **Real Examples** — Learn from actual DeFi exploits via git submodules.
 
-## Plugin: solidity-audit
+## Resources Included
 
-Comprehensive smart contract security auditing with:
+### Exploit References
+- Reentrancy patterns (classic, cross-function, read-only)
+- Oracle manipulation attacks
+- Flash loan exploits
+- Access control failures
+- Logic bugs and edge cases
 
-- **Multi-agent architecture** — Specialized agents for reentrancy, oracles, access control, etc.
-- **100+ item checklist** — With SWC IDs and severity guidance
-- **5 exploit references** — Reentrancy, oracle, flash loan, access control, logic bugs
-- **5 protocol guides** — Lending, AMM, staking, governance, bridges
-- **Professional report template** — Ready for client delivery
+### Protocol Guides
+- Lending protocols (Compound/Aave patterns)
+- AMMs (Uniswap, Curve, Balancer)
+- Staking systems
+- Governance mechanisms
+- Cross-chain bridges
 
-[View full documentation →](./plugins/solidity-audit/README.md)
+### Submodules
+- [DeFiHackLabs](https://github.com/SunWeb3Sec/DeFiHackLabs) — 300+ exploit reproductions
+- [learn-evm-attacks](https://github.com/coinspect/learn-evm-attacks) — Categorized with diagrams
+- [building-secure-contracts](https://github.com/crytic/building-secure-contracts) — Trail of Bits guides
 
 ## Contributing
 
-PRs welcome! See individual plugin READMEs for contribution guidelines.
+PRs welcome! See [STANDARDS.md](./STANDARDS.md) for how to create new skills and plugins.
 
 ## License
 
