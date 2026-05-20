@@ -1,0 +1,13 @@
+{
+  "name": "check-forge",
+  "version": "1.0.0",
+  "description": "Forge installation and version checker",
+  "type": "module",
+  "main": "check-forge.ts",
+  "scripts": {
+    "start": "bun run check-forge.ts"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}

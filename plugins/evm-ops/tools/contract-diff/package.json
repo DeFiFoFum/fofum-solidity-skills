@@ -1,0 +1,16 @@
+{
+  "name": "generate-contract-diff",
+  "version": "2.0.0",
+  "description": "Generate side-by-side HTML diffs for contract upgrade review",
+  "type": "module",
+  "main": "generate-contract-diff.ts",
+  "scripts": {
+    "start": "bun run generate-contract-diff.ts"
+  },
+  "dependencies": {
+    "diff2html": "3.4.56"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "evm-ops",
+  "version": "0.1.0",
+  "description": "EVM smart contract operations toolkit: fetch verified source, generate upgrade diffs, validate storage layouts, build Safe transactions, and simulate on Tenderly. Includes TypeScript tools runnable with Bun.",
+  "author": {
+    "name": "DeFiFoFum"
+  },
+  "repository": "https://github.com/DeFiFoFum/fofum-solidity-skills",
+  "homepage": "https://github.com/DeFiFoFum/fofum-solidity-skills/tree/main/plugins/evm-ops",
+  "license": "MIT",
+  "keywords": [
+    "solidity",
+    "evm",
+    "smart-contracts",
+    "upgrades",
+    "safe",
+    "tenderly",
+    "etherscan",
+    "foundry",
+    "proxy",
+    "storage-layout"
+  ],
+  "commands": "./commands/"
+}

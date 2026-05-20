@@ -1,0 +1,16 @@
+{
+  "name": "validate-storage",
+  "version": "1.0.0",
+  "description": "Storage layout validator for Forge - validates upgrade safety",
+  "type": "module",
+  "main": "validate-storage.ts",
+  "scripts": {
+    "start": "bun run validate-storage.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}

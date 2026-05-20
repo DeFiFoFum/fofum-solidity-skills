@@ -1,0 +1,14 @@
+{
+  "name": "simulate-bundle",
+  "version": "1.0.0",
+  "description": "Submit Safe transaction batches to Tenderly Simulation API",
+  "type": "module",
+  "main": "simulate-bundle.ts",
+  "scripts": {
+    "start": "bun run simulate-bundle.ts",
+    "help": "bun run simulate-bundle.ts --help"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}

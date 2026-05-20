@@ -17,6 +17,17 @@
       "source": "./plugins/solidity-audit",
       "category": "security",
       "homepage": "https://github.com/DeFiFoFum/fofum-solidity-skills/tree/main/plugins/solidity-audit"
+    },
+    {
+      "name": "evm-ops",
+      "description": "EVM smart contract operations toolkit: fetch verified source, generate upgrade diffs, validate storage layouts, build Safe transactions, simulate on Tenderly. Includes Bun-runnable TypeScript tools.",
+      "version": "0.1.0",
+      "author": {
+        "name": "DeFiFoFum"
+      },
+      "source": "./plugins/evm-ops",
+      "category": "operations",
+      "homepage": "https://github.com/DeFiFoFum/fofum-solidity-skills/tree/main/plugins/evm-ops"
     }
   ]
 }

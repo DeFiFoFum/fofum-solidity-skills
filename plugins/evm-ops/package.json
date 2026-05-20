@@ -1,0 +1,26 @@
+{
+  "name": "evm-ops",
+  "version": "0.1.0",
+  "description": "EVM smart contract operations toolkit for Claude Code",
+  "author": "DeFiFoFum",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DeFiFoFum/fofum-solidity-skills"
+  },
+  "keywords": [
+    "solidity",
+    "evm",
+    "smart-contracts",
+    "proxy",
+    "upgrades",
+    "safe",
+    "tenderly",
+    "foundry",
+    "etherscan",
+    "claude-code-plugin"
+  ],
+  "scripts": {
+    "install:all": "for dir in tools/*/; do (cd \"$dir\" && bun install); done"
+  }
+}

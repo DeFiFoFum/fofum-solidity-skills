@@ -1,115 +1,136 @@
 # Fofum Solidity Skills
 
-> **Claude Code skills for Solidity smart contract security auditing**
+Claude Code plugin marketplace for Solidity smart contract development and security. Install plugins to give Claude specialized knowledge and tools for auditing, upgrading, and operating EVM contracts.
 
-100% markdown, zero supply chain risk. Battle-tested against [$3.4B+ in real exploits](https://github.com/DeFiFoFum/fofum-solidity-evals).
+## Plugins
 
-## Quick Start
+| Plugin | Purpose | Type |
+|--------|---------|------|
+| [solidity-audit](#solidity-audit) | Smart contract security auditing | 100% Markdown |
+| [evm-ops](#evm-ops) | Live contract operations: diffs, upgrades, simulations | TypeScript tools |
+
+---
+
+## Install
 
 ```bash
-# 1. Add the marketplace
+# Add this marketplace
 /plugin marketplace add DeFiFoFum/fofum-solidity-skills
 
-# 2. Install the audit plugin
+# Install a plugin
 /plugin install solidity-audit@fofum-solidity-skills
+/plugin install evm-ops@fofum-solidity-skills
+```
 
-# 3. Validate your setup
+Or use the `/plugin` → **Discover** tab to browse and install.
+
+---
+
+## solidity-audit
+
+Security audit plugin with multi-agent architecture, 100+ item checklist, and real exploit references. 100% Markdown: no executable code, no npm install, safe for production codebases.
+
+**What you get:**
+- 5-phase audit methodology (Reconnaissance, Static Analysis, Manual Review, Verification, Reporting)
+- 100+ item checklist with SWC IDs and severity guidance
+- 6 specialized agents: reentrancy, oracle, access control, flash loan, upgradeability, logic
+- Exploit references from $3.4B+ in real hacks
+- Protocol guides: lending, AMM, staking, governance, bridges
+- Professional report template
+
+**Quick start:**
+
+```bash
+/plugin install solidity-audit@fofum-solidity-skills
 /validate
 ```
 
-Or run `/plugin` → **Discover** tab → browse and install.
-
-## What You Get
-
-The `solidity-audit` plugin gives Claude:
-
-- **5-phase audit methodology** — Combines Trail of Bits, Code4rena, Sherlock, Cyfrin, SlowMist
-- **100+ item checklist** — With SWC IDs and severity guidance
-- **6 specialized agents** — Reentrancy, oracle, access control, flash loan, upgradeability, gas
-- **5 exploit references** — Real patterns from $3.4B+ in hacks
-- **5 protocol guides** — Lending, AMM, staking, governance, bridges
-- **Professional report template** — Ready for client delivery
-- **`/validate` command** — Check your setup has recommended tools
-
-## Usage
-
-Once installed, just ask Claude to audit your contracts:
+Then ask Claude:
 
 ```
 Audit the contracts in src/
 ```
 
 ```
-Review this contract for security vulnerabilities: [paste code]
-```
-
-```
 Run a full security audit on this DeFi protocol
 ```
 
-Claude automatically uses the skill's methodology, checklists, and agents.
-
-## Eval Results
-
-Tested against 22 real-world exploits:
-
+**Eval results** (22 real-world exploits):
 ```
-✅ RECALL:           100.0% (22/22 known bugs found)
-🎁 EXTRA FINDINGS:   19 (bonus issues discovered)
-❌ FALSE POSITIVES:  0
-📊 OVERALL GRADE:    A+
+Recall:          100% (22/22 known bugs found)
+Extra findings:  19
+False positives: 0
+Grade:           A+
 ```
 
-See [fofum-solidity-evals](https://github.com/DeFiFoFum/fofum-solidity-evals) for methodology and benchmarks.
+See [fofum-solidity-evals](https://github.com/DeFiFoFum/fofum-solidity-evals) for methodology.
 
-## Plugins
+---
 
-| Plugin | Description | Status |
-|--------|-------------|--------|
-| [solidity-audit](./plugins/solidity-audit) | Smart contract security auditing | ✅ Ready |
-| solidity-dev | Smart contract development | 🔜 Coming |
-| solidity-deploy | Deployment & verification | 🔜 Coming |
+## evm-ops
 
-## Philosophy
+Operations toolkit for managing live EVM smart contracts. Includes Bun-runnable TypeScript tools for fetching verified source, generating upgrade diffs, validating storage layouts, building Gnosis Safe transactions, and simulating on Tenderly.
 
-- **100% Markdown** — No executable code, no npm install, no hooks, no submodules.
-- **Zero Supply Chain Risk** — Safe to use on production codebases.
-- **Battle-Tested** — Methodologies from the best audit firms.
-- **Self-Contained** — All knowledge embedded in markdown files.
+**What you get:**
+- `etherscan-source`: fetch verified source from Etherscan V2 (all major chains)
+- `contract-diff`: side-by-side HTML diffs of old vs new implementation for multi-sig review
+- `validate-storage-upgrade`: storage layout safety checks before proxy upgrades
+- `safe-tx-builder`: generate Gnosis Safe Transaction Builder JSON for proxy upgrades
+- `tenderly-simulate`: simulate Safe transaction batches before signing
+- `/upgrade-pipeline`: orchestrate the full upgrade workflow end-to-end
 
-## Resources Included
+**Prerequisites:** Bun, Foundry (forge + cast), Etherscan V2 API key, Tenderly credentials.
 
-### Exploit References
-- Reentrancy patterns (classic, cross-function, read-only)
-- Oracle manipulation attacks
-- Flash loan exploits
-- Access control failures
-- Logic bugs and edge cases
+**Quick start:**
 
-### Protocol Guides
-- Lending protocols (Compound/Aave patterns)
-- AMMs (Uniswap, Curve, Balancer)
-- Staking systems
-- Governance mechanisms
-- Cross-chain bridges
-
-### External Learning Resources
-For hands-on exploit reproduction, we recommend:
-- [DeFiHackLabs](https://github.com/SunWeb3Sec/DeFiHackLabs) — 300+ exploit reproductions
-- [learn-evm-attacks](https://github.com/coinspect/learn-evm-attacks) — Categorized with diagrams
-- [building-secure-contracts](https://github.com/crytic/building-secure-contracts) — Trail of Bits guides
-
-## Updating
-
-To get the latest version:
+```bash
+/plugin install evm-ops@fofum-solidity-skills
 ```
-/plugin marketplace update fofum-solidity-skills
-/plugin install solidity-audit@fofum-solidity-skills
+
+Install tool dependencies (run once, works for both local and global installs):
+
+```bash
+make -f ~/.claude/plugins/evm-ops/Makefile setup
 ```
+
+Set up global credentials (optional: tools also read from project `.env`):
+
+```bash
+make -f ~/.claude/plugins/evm-ops/Makefile setup-env
+# Edit ~/.claude/plugins/evm-ops/.env with your API keys
+```
+
+Verify everything is configured:
+
+```bash
+/validate-env
+```
+
+Then ask Claude:
+
+```
+Fetch the source for 0x1234... on base
+```
+
+```
+Generate an upgrade diff for VaultManager: 0xOLD vs 0xNEW on linea
+```
+
+```
+Validate storage upgrade safety for MyContract against deployed on arbitrum
+```
+
+```
+/upgrade-pipeline --chain base --proxy-admin 0x... --safe 0x... MyContract:0xOLD:0xNEW
+```
+
+**Supply chain note:** evm-ops includes TypeScript tools (Bun-runnable). Review `tools/` before installing if supply chain is a concern.
+
+---
 
 ## Contributing
 
-PRs welcome! See [STANDARDS.md](./STANDARDS.md) for how to create new skills and plugins.
+PRs welcome. See [STANDARDS.md](./STANDARDS.md) for how to author new skills and plugins.
 
 ## License
 
