@@ -10,13 +10,13 @@
  *
  * Usage:
  *   # Compare existing JSON files
- *   bun run index.ts <before.json> <after.json>
+ *   bun run validate-storage.ts <before.json> <after.json>
  *
  *   # Generate and compare for a contract
- *   bun run index.ts --contract <Contract.sol:Name> --before-ref <git-ref>
+ *   bun run validate-storage.ts --contract <Contract.sol:Name> --before-ref <git-ref>
  *
  *   # Just check forge installation
- *   bun run index.ts --check-forge
+ *   bun run validate-storage.ts --check-forge
  *
  * @version 1.0.0
  */
@@ -197,9 +197,11 @@ function validateStorageUpgrade(
   const beforeGaps = before.storage.filter((e) => isGapVariable(e));
   const afterGaps = after.storage.filter((e) => isGapVariable(e));
 
-  // Build maps
-  const beforeBySlot = new Map(beforeRegular.map((e) => [e.slot, e]));
-  const afterBySlot = new Map(afterRegular.map((e) => [e.slot, e]));
+  // Build maps — key by slot:offset to correctly handle packed variables
+  // (multiple variables sharing one slot at different byte offsets)
+  const slotOffsetKey = (e: StorageEntry) => `${e.slot}:${e.offset}`;
+  const beforeBySlot = new Map(beforeRegular.map((e) => [slotOffsetKey(e), e]));
+  const afterBySlot = new Map(afterRegular.map((e) => [slotOffsetKey(e), e]));
   const beforeByLabel = new Map(beforeRegular.map((e) => [e.label, e]));
 
   // Calculate gap ranges
@@ -227,19 +229,22 @@ function validateStorageUpgrade(
   }
 
   // Check existing slots
-  for (const [slot, beforeEntry] of beforeBySlot) {
-    const afterEntry = afterBySlot.get(slot);
+  for (const [key, beforeEntry] of beforeBySlot) {
+    const afterEntry = afterBySlot.get(key);
+    const slotDesc = beforeEntry.offset > 0
+      ? `slot ${beforeEntry.slot} offset ${beforeEntry.offset}`
+      : `slot ${beforeEntry.slot}`;
 
     if (!afterEntry) {
       errors.push(
-        `SLOT EMPTIED: Slot ${slot} had "${beforeEntry.label}" but is now empty`
+        `SLOT EMPTIED: ${slotDesc} had "${beforeEntry.label}" but is now empty`
       );
       continue;
     }
 
     if (beforeEntry.label !== afterEntry.label) {
       warnings.push(
-        `LABEL RENAMED: Slot ${slot}: "${beforeEntry.label}" → "${afterEntry.label}"`
+        `LABEL RENAMED: ${slotDesc}: "${beforeEntry.label}" → "${afterEntry.label}"`
       );
     }
 
@@ -258,12 +263,12 @@ function validateStorageUpgrade(
           afterEntry.type.match(/t_contract\((\w+)\)/)?.[1];
         if (beforeInterface !== afterInterface) {
           warnings.push(
-            `INTERFACE CHANGED: Slot ${slot}: ${beforeInterface} → ${afterInterface}`
+            `INTERFACE CHANGED: ${slotDesc}: ${beforeInterface} → ${afterInterface}`
           );
         }
       } else {
         errors.push(
-          `TYPE CHANGED: Slot ${slot} "${beforeEntry.label}": ${beforeEntry.type} → ${afterEntry.type}`
+          `TYPE CHANGED: ${slotDesc} "${beforeEntry.label}": ${beforeEntry.type} → ${afterEntry.type}`
         );
       }
     }
@@ -271,7 +276,7 @@ function validateStorageUpgrade(
 
   // Check for shifted slots
   for (const [label, beforeEntry] of beforeByLabel) {
-    const afterEntry = afterBySlot.get(beforeEntry.slot);
+    const afterEntry = afterBySlot.get(slotOffsetKey(beforeEntry));
     if (afterEntry && afterEntry.label !== label) {
       const afterByLabelEntry = Array.from(afterBySlot.values()).find(
         (e) => e.label === label
@@ -370,9 +375,9 @@ Storage Layout Validator for Forge v1.0.0
 Schema: ${CURRENT_SCHEMA_VERSION} (Forge ${FORGE_VERSIONS[CURRENT_SCHEMA_VERSION].minVersion} - ${FORGE_VERSIONS[CURRENT_SCHEMA_VERSION].maxVersion})
 
 Usage:
-  bun run index.ts <before.json> <after.json>
-  bun run index.ts --check-forge
-  bun run index.ts --generate <Contract.sol:Name> -o <output.json>
+  bun run validate-storage.ts <before.json> <after.json>
+  bun run validate-storage.ts --check-forge
+  bun run validate-storage.ts --generate <Contract.sol:Name> -o <output.json>
 
 Options:
   --check-forge      Check Forge installation and version
@@ -381,13 +386,13 @@ Options:
 
 Examples:
   # Check Forge installation
-  bun run index.ts --check-forge
+  bun run validate-storage.ts --check-forge
 
   # Generate storage layout
-  bun run index.ts --generate contracts/MyContract.sol:MyContract -o storage.json
+  bun run validate-storage.ts --generate contracts/MyContract.sol:MyContract -o storage.json
 
   # Compare two layouts
-  bun run index.ts storage-before.json storage-after.json
+  bun run validate-storage.ts storage-before.json storage-after.json
 `);
 }
 

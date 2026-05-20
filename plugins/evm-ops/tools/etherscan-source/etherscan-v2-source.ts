@@ -362,8 +362,13 @@ function saveSourceFiles(
   fs.mkdirSync(targetDir, { recursive: true });
 
   // Save each source file
+  const resolvedTargetDir = path.resolve(targetDir);
   for (const file of files) {
-    const filePath = path.join(targetDir, file.path);
+    const filePath = path.resolve(path.join(targetDir, file.path));
+    if (!filePath.startsWith(resolvedTargetDir + path.sep)) {
+      console.warn(`Skipping unsafe path from Etherscan response: ${file.path}`);
+      continue;
+    }
     const fileDir = path.dirname(filePath);
 
     fs.mkdirSync(fileDir, { recursive: true });

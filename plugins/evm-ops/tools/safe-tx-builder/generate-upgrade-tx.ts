@@ -74,6 +74,19 @@ const PROXY_ADMIN_UPGRADE_METHOD: ContractMethod = {
   ],
 };
 
+// ============================================================================
+// ABI Encoding
+// ============================================================================
+
+// Encode upgrade(address,address) calldata without external deps.
+// Selector = keccak256("upgrade(address,address)")[0:4] = 0x99a88ec4
+function encodeUpgradeCalldata(proxy: string, implementation: string): string {
+  const selector = "99a88ec4";
+  const proxyHex = proxy.replace("0x", "").toLowerCase().padStart(64, "0");
+  const implHex = implementation.replace("0x", "").toLowerCase().padStart(64, "0");
+  return "0x" + selector + proxyHex + implHex;
+}
+
 // Default Safe addresses (Omnichain)
 const SAFE_ADDRESSES = {
   secureAdmin: "0x9DB42D3BDA1525963db3B2372C4DAABaf0491A53",
@@ -223,10 +236,12 @@ function generateUpgradeTx(config: UpgradeConfig): TxBuilder {
     }
   );
 
-  builder.addTransaction(config.proxyAdmin, PROXY_ADMIN_UPGRADE_METHOD, {
-    proxy: config.proxy,
-    implementation: config.implementation,
-  });
+  builder.addTransaction(
+    config.proxyAdmin,
+    PROXY_ADMIN_UPGRADE_METHOD,
+    { proxy: config.proxy, implementation: config.implementation },
+    { data: encodeUpgradeCalldata(config.proxy, config.implementation) }
+  );
 
   return builder.build();
 }

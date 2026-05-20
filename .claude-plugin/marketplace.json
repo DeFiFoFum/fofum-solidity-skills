@@ -21,7 +21,6 @@
     {
       "name": "evm-ops",
       "description": "EVM smart contract operations toolkit: fetch verified source, generate upgrade diffs, validate storage layouts, build Safe transactions, simulate on Tenderly. Includes Bun-runnable TypeScript tools.",
-      "version": "0.1.0",
       "author": {
         "name": "DeFiFoFum"
       },

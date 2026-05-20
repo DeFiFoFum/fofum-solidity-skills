@@ -6,8 +6,8 @@
  * with the storage layout validator.
  *
  * Usage:
- *   bun run index.ts
- *   bun run index.ts --json
+ *   bun run check-forge.ts
+ *   bun run check-forge.ts --json
  *
  * Exit codes:
  *   0 - Forge is installed and compatible

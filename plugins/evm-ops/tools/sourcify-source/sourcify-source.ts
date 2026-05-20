@@ -331,7 +331,12 @@ function saveSourceFiles(
       cleanPath = cleanPath.slice(8);
     }
 
-    const filePath = path.join(targetDir, cleanPath);
+    const resolvedTargetDir = path.resolve(targetDir);
+    const filePath = path.resolve(path.join(targetDir, cleanPath));
+    if (!filePath.startsWith(resolvedTargetDir + path.sep)) {
+      console.warn(`Skipping unsafe path from Sourcify response: ${file.path}`);
+      continue;
+    }
     const fileDir = path.dirname(filePath);
 
     fs.mkdirSync(fileDir, { recursive: true });
