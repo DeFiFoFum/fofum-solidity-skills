@@ -155,22 +155,18 @@ function addressHex(addr: string): string {
   return padLeft(addr.replace("0x", "").toLowerCase(), 32);
 }
 
-function keccak256(data: Uint8Array): string {
-  // Use Bun's native crypto
-  const hash = new Bun.CryptoHasher("sha3-256");
-  // Bun doesn't have keccak, use createHash from crypto
-  // Actually, keccak256 != sha3-256. Use a manual approach.
-  // We'll shell out to cast for keccak since we need it
-  throw new Error("Use keccak256Hex instead");
-}
-
 /** Compute keccak256 using cast (available in the environment) */
 function keccak256Hex(hexData: string): string {
   const h = hexData.startsWith("0x") ? hexData : "0x" + hexData;
   const result = Bun.spawnSync(["cast", "keccak", h]);
+  if (result.exitCode !== 0) {
+    throw new Error(
+      `cast keccak failed (exit ${result.exitCode}): ${result.stderr.toString().trim()}`
+    );
+  }
   const output = result.stdout.toString().trim();
   if (!output.startsWith("0x")) {
-    throw new Error(`keccak256 failed: ${result.stderr.toString()}`);
+    throw new Error(`cast keccak returned unexpected output: ${output}`);
   }
   return output;
 }

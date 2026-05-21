@@ -11,6 +11,19 @@
  *   bun run generate-upgrade-tx.ts --help
  */
 import { createHash } from "crypto";
+
+function stableStringify(obj: unknown): string {
+  if (typeof obj !== "object" || obj === null) return JSON.stringify(obj);
+  if (Array.isArray(obj)) return "[" + obj.map(stableStringify).join(",") + "]";
+  const keys = Object.keys(obj as object).sort();
+  return (
+    "{" +
+    keys
+      .map((k) => JSON.stringify(k) + ":" + stableStringify((obj as Record<string, unknown>)[k]))
+      .join(",") +
+    "}"
+  );
+}
 import * as fs from "fs";
 import * as path from "path";
 
@@ -212,10 +225,7 @@ class SafeTxBuilder {
       })),
     };
 
-    const jsonString = JSON.stringify(
-      checksumData,
-      Object.keys(checksumData).sort()
-    );
+    const jsonString = stableStringify(checksumData);
     const hash = createHash("sha256").update(jsonString).digest("hex");
     return hash.substring(0, 16);
   }

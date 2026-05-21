@@ -137,6 +137,11 @@ function parseContractArg(arg: string): ContractEntry {
 
   const [name, oldAddr, newAddr] = parts;
 
+  if (!/^[A-Za-z0-9_-]+$/.test(name)) {
+    throw new Error(
+      `Invalid contract name "${name}": only alphanumeric, hyphens, and underscores allowed`
+    );
+  }
   if (!/^0x[a-fA-F0-9]{40}$/.test(oldAddr)) {
     throw new Error(`Invalid old address for ${name}: ${oldAddr}`);
   }
@@ -298,7 +303,10 @@ async function main(): Promise<void> {
       headerHtml,
     });
 
-    const htmlPath = path.join(outputDir, `${contract.name}.html`);
+    const htmlPath = path.resolve(outputDir, `${contract.name}.html`);
+    if (!htmlPath.startsWith(path.resolve(outputDir) + path.sep)) {
+      throw new Error(`Unsafe output path for contract "${contract.name}"`);
+    }
     fs.writeFileSync(htmlPath, html);
 
     const status = identical

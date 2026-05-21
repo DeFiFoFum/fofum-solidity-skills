@@ -427,7 +427,7 @@ function parseArgs(): CLIOptions | null {
   }
 
   // Find address (first arg that looks like an address)
-  const address = args.find((arg) => arg.startsWith("0x") && arg.length === 42);
+  const address = args.find((arg) => /^0x[a-fA-F0-9]{40}$/.test(arg));
   if (!address) {
     console.error("Error: No valid address provided");
     return null;

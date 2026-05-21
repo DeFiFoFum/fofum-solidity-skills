@@ -330,33 +330,34 @@ function validateStorageUpgrade(
   }
 
   // Check new variables
-  for (const [slot, afterEntry] of afterBySlot) {
-    if (!beforeBySlot.has(slot)) {
-      const slotNum = parseInt(slot, 10);
+  for (const [key, afterEntry] of afterBySlot) {
+    if (!beforeBySlot.has(key)) {
+      const slotNum = parseInt(afterEntry.slot, 10);
+      const slotDesc = afterEntry.offset > 0
+        ? `slot ${afterEntry.slot} offset ${afterEntry.offset}`
+        : `slot ${afterEntry.slot}`;
       const wasInGap = beforeGapRanges.some(
         (g) => slotNum >= g.startSlot && slotNum <= g.endSlot
       );
 
       if (wasInGap) {
         warnings.push(
-          `NEW VARIABLE: "${afterEntry.label}" at slot ${slot} (allocated from __gap)`
+          `NEW VARIABLE: "${afterEntry.label}" at ${slotDesc} (allocated from __gap)`
         );
       } else if (slotNum > maxBeforeSlot && beforeGapRanges.length === 0) {
-        // If there were no gaps at all, adding at the end is safe (but not ideal)
         warnings.push(
-          `NEW VARIABLE AT END: "${afterEntry.label}" at slot ${slot} (no __gap existed, appended at end - consider adding __gap for future upgrades)`
+          `NEW VARIABLE AT END: "${afterEntry.label}" at ${slotDesc} (no __gap existed, appended at end - consider adding __gap for future upgrades)`
         );
       } else if (
         slotNum > maxBeforeSlot &&
         !beforeGapRanges.some((g) => g.endSlot >= slotNum)
       ) {
-        // There are gaps but none cover this slot - it's after all gaps
         warnings.push(
-          `NEW VARIABLE AT END: "${afterEntry.label}" at slot ${slot} (beyond existing __gap - consider extending __gap reservation)`
+          `NEW VARIABLE AT END: "${afterEntry.label}" at ${slotDesc} (beyond existing __gap - consider extending __gap reservation)`
         );
       } else {
         errors.push(
-          `INVALID NEW SLOT: "${afterEntry.label}" at slot ${slot} - not part of a __gap and would collide with existing storage`
+          `INVALID NEW SLOT: "${afterEntry.label}" at ${slotDesc} - not part of a __gap and would collide with existing storage`
         );
       }
     }
