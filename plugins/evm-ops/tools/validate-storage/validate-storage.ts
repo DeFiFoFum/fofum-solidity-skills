@@ -197,7 +197,7 @@ function validateStorageUpgrade(
   const beforeGaps = before.storage.filter((e) => isGapVariable(e));
   const afterGaps = after.storage.filter((e) => isGapVariable(e));
 
-  // Build maps — key by slot:offset to correctly handle packed variables
+  // Build maps keyed by slot:offset to correctly handle packed variables
   // (multiple variables sharing one slot at different byte offsets)
   const slotOffsetKey = (e: StorageEntry) => `${e.slot}:${e.offset}`;
   const beforeBySlot = new Map(beforeRegular.map((e) => [slotOffsetKey(e), e]));
