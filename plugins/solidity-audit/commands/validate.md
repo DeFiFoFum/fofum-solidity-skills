@@ -11,17 +11,17 @@ Verify your Claude Code setup is ready for Solidity security auditing.
 ## What It Checks
 
 ### Required
-- ✅ **fofum-solidity-audit** — This plugin (you have it if you're seeing this)
+- ✅ **fofum-solidity-audit**: This plugin (you have it if you're seeing this)
 
 ### Recommended  
-- 🔧 **Trail of Bits tools** — Slither, Echidna for static analysis
+- 🔧 **Trail of Bits tools**: Slither, Echidna for static analysis
   - Install: `pip install slither-analyzer`
   - Or: `/plugin install slither@claude-plugins-official` (if available)
 
 ### Optional Enhancements
-- 📊 **Foundry** — For running tests and fuzzing
+- 📊 **Foundry**: For running tests and fuzzing
   - Install: `curl -L https://foundry.paradigm.xyz | bash && foundryup`
-- 🔍 **Mythril** — Symbolic execution
+- 🔍 **Mythril**: Symbolic execution
   - Install: `pip install mythril`
 
 ## Validation Steps

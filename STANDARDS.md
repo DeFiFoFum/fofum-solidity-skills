@@ -7,15 +7,15 @@
 ## Executive Summary
 
 **Philosophy:**
-- 100% Markdown — no executable code, zero supply chain risk
+- 100% Markdown: no executable code, zero supply chain risk
 - One marketplace repo → multiple focused plugins
 - Each plugin does ONE thing well
 - Real examples > abstract theory
 
 **Key Files:**
-- `marketplace.json` — Plugin registry (root level)
-- `SKILL.md` — Main skill instructions (per plugin)
-- `resources/` — Reference materials Claude reads during tasks
+- `marketplace.json`: Plugin registry (root level)
+- `SKILL.md`: Main skill instructions (per plugin)
+- `resources/`: Reference materials Claude reads during tasks
 
 ---
 
@@ -300,6 +300,6 @@ That's it! Start minimal, add resources as needed.
 
 ## References
 
-- [Trail of Bits Skills](https://github.com/trailofbits/skills) — 27 plugins, good examples
-- [Anthropic Official Plugins](https://github.com/anthropics/claude-plugins-official) — Schema reference
+- [Trail of Bits Skills](https://github.com/trailofbits/skills): 27 plugins, good examples
+- [Anthropic Official Plugins](https://github.com/anthropics/claude-plugins-official): Schema reference
 - [Claude Code Plugin Docs](https://docs.anthropic.com/en/docs/claude-code/plugins)

@@ -1,0 +1,13 @@
+{
+  "name": "sourcify-source",
+  "version": "1.0.0",
+  "description": "Fetch verified contract source code from Sourcify API",
+  "type": "module",
+  "main": "sourcify-source.ts",
+  "scripts": {
+    "start": "bun run sourcify-source.ts"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}

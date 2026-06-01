@@ -1,0 +1,13 @@
+{
+  "name": "etherscan-source",
+  "version": "1.0.0",
+  "description": "Fetch verified contract source code from Etherscan V2 API",
+  "type": "module",
+  "main": "etherscan-v2-source.ts",
+  "scripts": {
+    "start": "bun run etherscan-v2-source.ts"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}

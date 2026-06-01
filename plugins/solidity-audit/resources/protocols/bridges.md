@@ -2,7 +2,7 @@
 
 ## Overview
 
-Bridges transfer assets/messages between blockchains. They are the highest-value targets in DeFi — $2B+ stolen from bridges. Core security concerns: message verification, validator security, and replay attacks.
+Bridges transfer assets/messages between blockchains. They are the highest-value targets in DeFi: $2B+ stolen from bridges. Core security concerns: message verification, validator security, and replay attacks.
 
 ---
 
@@ -157,7 +157,7 @@ assert(wrappedTokenSupply <= originalTokenLockedAmount);
 
 ## Real Exploits
 
-### Ronin Bridge (Mar 2022) — $625M
+### Ronin Bridge (Mar 2022): $625M
 
 **What happened:**
 - Attackers compromised 5 of 9 validator keys
@@ -166,7 +166,7 @@ assert(wrappedTokenSupply <= originalTokenLockedAmount);
 
 **Root cause:** Insufficient validator distribution + social engineering
 
-### Wormhole (Feb 2022) — $326M
+### Wormhole (Feb 2022): $326M
 
 **What happened:**
 - Attacker exploited Solana signature verification bug
@@ -175,7 +175,7 @@ assert(wrappedTokenSupply <= originalTokenLockedAmount);
 
 **Root cause:** Invalid signature verification on Solana side
 
-### Nomad (Aug 2022) — $190M
+### Nomad (Aug 2022): $190M
 
 **What happened:**
 - Routine upgrade set trusted root to 0x00
@@ -195,7 +195,7 @@ function process(bytes memory _message) public {
 }
 ```
 
-### Poly Network (Aug 2021) — $611M
+### Poly Network (Aug 2021): $611M
 
 **What happened:**
 - Attacker exploited cross-chain contract call

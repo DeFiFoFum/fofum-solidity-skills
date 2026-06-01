@@ -1,0 +1,14 @@
+{
+  "name": "generate-upgrade-tx",
+  "version": "1.0.0",
+  "description": "Generate Gnosis Safe Transaction Builder JSON files for proxy upgrades",
+  "type": "module",
+  "main": "generate-upgrade-tx.ts",
+  "scripts": {
+    "start": "bun run generate-upgrade-tx.ts",
+    "help": "bun run generate-upgrade-tx.ts --help"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}
