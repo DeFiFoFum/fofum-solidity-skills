@@ -24,14 +24,34 @@ OUTPUT_DIR="${3:-./contracts/proxies}"
 # metacharacter injection (/, &, backslash) and path traversal (.., /) in
 # one check, since a valid identifier can contain neither.
 IDENTIFIER_RE='^[A-Za-z_][A-Za-z0-9_]*$'
-if [[ ! "${CONTRACT_NAME}" =~ ${IDENTIFIER_RE} ]]; then
-  echo "Error: CONTRACT_NAME '${CONTRACT_NAME}' is not a valid Solidity identifier" >&2
-  exit 1
-fi
-if [[ ! "${IMPLEMENTATION_NAME}" =~ ${IDENTIFIER_RE} ]]; then
-  echo "Error: IMPLEMENTATION_NAME '${IMPLEMENTATION_NAME}' is not a valid Solidity identifier" >&2
-  exit 1
-fi
+# A syntactically valid identifier can still be a reserved word ("contract",
+# "is", ...), which would compile to nonsense ("contract contract is ...").
+# This list covers the keywords that could plausibly appear as a proxy or
+# implementation name; it isn't the full Solidity grammar's reserved-word
+# list, just the realistic footguns.
+RESERVED_WORDS=(contract interface library is function returns import pragma using struct enum event error modifier)
+
+is_reserved() {
+  local name="$1"
+  local word
+  for word in "${RESERVED_WORDS[@]}"; do
+    [[ "${name}" == "${word}" ]] && return 0
+  done
+  return 1
+}
+
+for label_and_value in "CONTRACT_NAME:${CONTRACT_NAME}" "IMPLEMENTATION_NAME:${IMPLEMENTATION_NAME}"; do
+  label="${label_and_value%%:*}"
+  value="${label_and_value#*:}"
+  if [[ ! "${value}" =~ ${IDENTIFIER_RE} ]]; then
+    echo "Error: ${label} '${value}' is not a valid Solidity identifier" >&2
+    exit 1
+  fi
+  if is_reserved "${value}"; then
+    echo "Error: ${label} '${value}' is a Solidity reserved word" >&2
+    exit 1
+  fi
+done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE="${SCRIPT_DIR}/../assets/NamedProxy.template.sol"
