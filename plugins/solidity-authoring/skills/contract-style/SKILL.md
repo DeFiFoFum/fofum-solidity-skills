@@ -7,10 +7,11 @@ description: |
   visibility groups, "make the natspec more precise", "don't mention audit issues
   in comments", "feature-first" ordering, writing a deploy script that sets an
   initial timestamp, snapshot, epoch, or starting value. Do NOT use for finding
-  vulnerabilities or writing an audit report (see the solidity-audit plugin);
-  and do NOT use for running deployment, verification, or upgrade tooling
-  itself (see the evm-ops plugin) - this skill is authoring conventions only,
-  not audit or ops execution.
+  vulnerabilities or writing an audit report (see the solidity-audit plugin); do
+  NOT use for running deployment, verification, or upgrade tooling itself (see
+  the evm-ops plugin); and do NOT use for proxy patterns or storage-layout safety
+  on upgradeable contracts (see the sibling upgradeable-contracts skill) - this
+  skill is general authoring conventions, not upgrade-specific ones.
 ---
 
 # Solidity contract style
@@ -21,7 +22,8 @@ Conventions for how contracts in this author's projects get written, not how
 they get audited or operated. Covers comment/NatSpec discipline, function
 ordering inside a contract, and deploy-time value handling. Apply these by
 default when generating or editing `.sol` files unless the project's own
-style guide says otherwise.
+style guide says otherwise. Proxy patterns and storage-layout safety for
+upgradeable contracts live in the sibling `upgradeable-contracts` skill.
 
 ## Outcomes we are looking for
 
@@ -118,7 +120,8 @@ receipt; a post-deploy validation script can recompute and diff them.
   above (feature-first `deposit`/`withdraw` clusters, precise NatSpec,
   inferred `depositsOpenedAt`) - verified to compile with `forge build`.
 - `assets/ExampleVaultProxy.sol`: the named-proxy wrapper this example is
-  deployed behind. It's generated output, not hand-written.
+  deployed behind. It's generated output, not hand-written; see the sibling
+  `upgradeable-contracts` skill for the template and generator it came from.
 - `assets/ExampleVault.t.sol`: Foundry tests for the example above, grouped
   by feature; 7 tests, verified passing with `forge test`.
 - `references/compiling-with-forge.md`: exact, verified steps to install
