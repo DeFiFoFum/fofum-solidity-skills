@@ -34,12 +34,14 @@ mkdir -p "${OUTPUT_DIR}"
 HEX_FILE="${OUTPUT_DIR}/${NAME}.runtime.hex"
 PROVENANCE_FILE="${OUTPUT_DIR}/${NAME}.provenance.json"
 
-BLOCK_HEX="$(curl -s -m 15 "${RPC_URL}" -X POST -H "Content-Type: application/json" \
+BLOCK_HEX="$(curl -s -m 15 -X POST -H "Content-Type: application/json" \
   --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
+  -- "${RPC_URL}" \
   | python3 -c "import json,sys; print(json.load(sys.stdin)['result'])")"
 
-CODE="$(curl -s -m 15 "${RPC_URL}" -X POST -H "Content-Type: application/json" \
+CODE="$(curl -s -m 15 -X POST -H "Content-Type: application/json" \
   --data "{\"jsonrpc\":\"2.0\",\"method\":\"eth_getCode\",\"params\":[\"${ADDRESS}\",\"${BLOCK_HEX}\"],\"id\":1}" \
+  -- "${RPC_URL}" \
   | python3 -c "import json,sys; print(json.load(sys.stdin)['result'])")"
 
 if [ "${CODE}" = "0x" ] || [ -z "${CODE}" ]; then
