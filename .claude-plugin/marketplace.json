@@ -31,7 +31,7 @@
     {
       "name": "solidity-authoring",
       "description": "Authoring conventions for writing Solidity contracts: precise NatSpec, feature-first function ordering, deploy-time value inference, named-proxy patterns, storage-layout safety across upgrades, and mock-vs-vendored-bytecode-vs-fork testing realism.",
-      "version": "0.1.0",
+      "version": "0.3.0",
       "author": {
         "name": "DeFiFoFum"
       },
