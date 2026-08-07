@@ -8,8 +8,8 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 /// @title ExampleVault
 /// @notice Reference implementation demonstrating this author's Solidity
 /// style: feature-first function ordering, precise NatSpec, and deploy-time
-/// value inference. Intended to sit behind a NamedProxy
-/// (see NamedProxy.template.sol) rather than be deployed directly.
+/// value inference. Intended to sit behind a named proxy (see
+/// ExampleVaultProxy.sol) rather than be deployed directly.
 contract ExampleVault is Initializable {
     using SafeERC20 for IERC20;
 

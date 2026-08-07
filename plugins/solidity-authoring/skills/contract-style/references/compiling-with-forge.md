@@ -18,11 +18,13 @@ cd my-project
 ## 2. Install the two OpenZeppelin dependencies
 
 Pin a version rather than tracking a default branch, so the install is
-reproducible:
+reproducible. Keep `--no-git` consistent with step 1: without it, `forge
+install` tries to add the dependency as a git submodule, which fails
+outright in a project that was scaffolded without git:
 
 ```bash
-forge install OpenZeppelin/openzeppelin-contracts@v5.7.0
-forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.7.0
+forge install OpenZeppelin/openzeppelin-contracts@v5.7.0 --no-git
+forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.7.0 --no-git
 ```
 
 `forge-std` is already installed by `forge init`.
