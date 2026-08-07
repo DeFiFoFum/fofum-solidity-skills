@@ -1,0 +1,35 @@
+name: solidity-tests
+
+"on":
+  push:
+  pull_request:
+  schedule:
+    # Weekly, not on every push: live-fork and gas/performance tests need a
+    # real RPC, drift as the chain moves, and are too slow/flaky to gate a PR on.
+    - cron: "0 6 * * 1"
+
+jobs:
+  daily:
+    name: fast (vendored bytecode, no RPC)
+    # Runs on every push/PR. Deterministic and network-free: dependencies
+    # backed by real vendored bytecode via vm.etch, not a live fork.
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: forge test -vvv
+
+  weekly:
+    name: fork + gas (live RPC, scheduled)
+    # Runs only on the cron trigger. This is the "fly like you test" tier:
+    # real live state, real gas costs against real callees. A failure here
+    # is a monitoring signal (the live environment moved), not a merge
+    # gate, so it does not run on push/pull_request.
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: forge test --fork-url ${{ secrets.MAINNET_RPC_URL }} -vvv
+      - run: forge snapshot --fork-url ${{ secrets.MAINNET_RPC_URL }} --diff .gas-snapshot
