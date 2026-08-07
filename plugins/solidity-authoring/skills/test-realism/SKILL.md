@@ -44,8 +44,9 @@ wearing a "unit test" label.
 
 **Full live-fork and performance tests run on a recurring cadence, not blocking every PR.**
 Signals: a scheduled job (cron, not on-push) runs against a live fork and
-gas/performance benchmarks; a failure there opens an issue or alert, it
-doesn't block an unrelated same-day PR the way a per-push test failure does.
+gas/performance benchmarks; a failure there is treated as its own
+monitoring signal to triage, not as a status check blocking an unrelated
+same-day PR the way a per-push test failure does.
 
 **A test's realism tier is a deliberate choice, not a default to whatever's fastest to write.**
 Signals: a reviewer can point at any test file and say which tier it's in

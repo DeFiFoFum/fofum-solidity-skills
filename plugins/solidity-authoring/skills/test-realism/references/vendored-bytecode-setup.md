@@ -61,12 +61,14 @@ verified passing with `forge test`, exercising real WETH9 `deposit`,
 
 ## 5. Refreshing vendored bytecode
 
-Re-run the fetch script deliberately (e.g. as part of the weekly job in
-`assets/ci-solidity-tests.yml`) if the real contract is known to have
-upgraded, or on a periodic cadence for contracts you know evolve. Treat an
-unrefreshed vendored artifact the same way you'd treat a `package-lock`
-that's years old: not wrong by default, but worth knowing when it was last
-true.
+Re-run the fetch script deliberately if the real contract is known to have
+upgraded, or on a periodic cadence for contracts you know evolve.
+`assets/ci-solidity-tests.yml`'s weekly job has a commented-out example
+step showing where to add this per project-specific vendored dependency;
+it isn't wired up by default because the template doesn't know which
+contracts your project vendors. Treat an unrefreshed vendored artifact the
+same way you'd treat a `package-lock` that's years old: not wrong by
+default, but worth knowing when it was last true.
 
 ## For comparison: the live-fork tier
 

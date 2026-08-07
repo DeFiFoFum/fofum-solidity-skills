@@ -50,9 +50,15 @@ fi
 # No trailing newline: vm.parseBytes rejects one.
 printf '%s' "${CODE}" > "${HEX_FILE}"
 
-BLOCK_NUMBER="$(python3 -c "print(int('${BLOCK_HEX}', 16))")"
+# Values are passed as argv, not interpolated into the python source
+# string, so a stray quote or shell metacharacter in RPC_URL (or a
+# malformed BLOCK_HEX) can't break out of the string literal.
+BLOCK_NUMBER="$(python3 -c "import sys; print(int(sys.argv[1], 16))" "${BLOCK_HEX}")"
 FETCHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-RPC_HOST="$(python3 -c "from urllib.parse import urlparse; print(urlparse('${RPC_URL}').netloc)")"
+# .hostname (not .netloc): netloc includes userinfo, so an RPC URL like
+# https://api_key@host would otherwise leak the key into provenance despite
+# the "no API keys" claim below.
+RPC_HOST="$(python3 -c "import sys; from urllib.parse import urlparse; print(urlparse(sys.argv[1]).hostname)" "${RPC_URL}")"
 
 cat > "${PROVENANCE_FILE}" <<EOF
 {
