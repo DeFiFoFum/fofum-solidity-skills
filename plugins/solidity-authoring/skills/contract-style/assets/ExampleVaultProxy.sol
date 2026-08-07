@@ -5,9 +5,7 @@ import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transpa
 
 /// @title ExampleVaultProxy
 /// @notice Named transparent proxy for the ExampleVault upgradeable contract.
-/// @dev Generated from NamedProxy.template.sol by scripts/generate-named-proxy.sh.
-/// Regenerate from the template instead of hand-editing generated output, so
-/// every named proxy in a deployment stays shaped identically.
+/// @dev Committed as pre-generated output, not hand-written.
 contract ExampleVaultProxy is TransparentUpgradeableProxy {
     /// @dev Compile-time constant, inlined into bytecode at compile time (not
     /// a storage write). This is what prevents two differently-named proxies
