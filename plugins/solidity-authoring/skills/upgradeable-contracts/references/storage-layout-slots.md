@@ -1,10 +1,11 @@
 # Storage-layout slot mechanics
 
-Read this when a diff touches `__gap`, adds a field to a struct that's a
-mapping's value type, or otherwise changes state-variable declarations in a
-contract that sits behind a proxy. Explains why some of those changes are
-storage-layout-safe and some aren't, with a worked example you can rebuild
-and inspect yourself rather than take on faith.
+Read this when a diff touches `__gap`, adds a field to a struct used as a
+mapping's value type or an array's element type, or otherwise changes
+state-variable declarations in a contract that sits behind a proxy.
+Explains why some of those changes are storage-layout-safe and some
+aren't, with worked examples you can rebuild and inspect yourself rather
+than take on faith.
 
 ## The rule
 
@@ -13,14 +14,25 @@ only by its directly-declared, top-level state variables, in declaration
 order. A `mapping`'s own slot just anchors a hash: each entry's actual data
 lives at `keccak256(abi.encode(key, mappingSlot))`, a location derived from
 that one anchor slot, completely independent of the mapping's value type.
-Growing a struct that's a mapping's value type (or an array's element type)
-never changes the contract's own slot count, because that struct never had
-its own reserved slots to begin with.
+Growing a struct that's a mapping's value type never changes the
+contract's own slot count, because that struct never had its own reserved
+slots to begin with, and every entry is independently addressed.
 
 `__gap` exists to reserve capacity for genuinely new *top-level* state
 variables in a future upgrade. Shrinking it only makes sense when a diff
 adds a new top-level variable; shrink by exactly that many slots, no more,
 no less.
+
+**Mappings and dynamic arrays are not the same here.** A dynamic array's
+elements are packed sequentially starting at a keccak256-derived base
+slot, back to back, unlike a mapping's independently-hashed entries.
+Growing a struct used as an *array's element type* changes the stride
+between elements, which corrupts every element after the first when read
+back under the new layout, existing data included. Never resize a struct
+used as an array's element type in an upgrade. See `assets/
+ArrayElementCorruption.t.sol` for a reproduction: it etches a
+bigger-struct contract's bytecode over a smaller-struct contract's
+storage and shows the second array element's fields coming back wrong.
 
 ## The incident this generalizes from
 
@@ -38,8 +50,9 @@ first-pass manual read had nearly waved it through as a false positive.
 ## Reproduce it yourself
 
 The four contracts in `assets/` model exactly this progression. Copy them
-into a Foundry project (see `../contract-style/references/compiling-with-forge.md`
-for the install/remapping steps) and run:
+into a Foundry project (see
+`../../contract-style/references/compiling-with-forge.md` for the
+install/remapping steps) and run:
 
 ```bash
 forge inspect StorageLayoutV1 storage-layout
@@ -65,10 +78,14 @@ occupies.
 
 ## Applying this to a real diff
 
-Ask, for any diff that touches `__gap` or a struct used inside a
-`mapping`/array: did this diff add, remove, or reorder a *top-level* state
+First check whether the diff resizes a struct used as an array's element
+type. If it does, that's unsafe regardless of anything else, full stop:
+don't ship it.
+
+Otherwise, for a diff touching `__gap` or a struct used as a mapping's
+value type: did this diff add, remove, or reorder a *top-level* state
 variable? If yes, `__gap` should move/shrink by exactly that count. If no,
-whatever else the diff did to a mapping's value type, `__gap` should not
+whatever else the diff did to the mapping's value type, `__gap` should not
 change at all. Don't settle this from memory under time pressure; run
 `forge inspect <old> storage-layout` and `forge inspect <new> storage-layout`
 and diff the slot numbers, the same way the incident above was actually

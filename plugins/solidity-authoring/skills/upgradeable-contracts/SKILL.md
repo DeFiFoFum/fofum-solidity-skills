@@ -35,10 +35,11 @@ Signals: the verified source name shown on a block explorer or in a Tenderly
 trace matches the proxy's business purpose, not `TransparentUpgradeableProxy`.
 
 **Storage-layout changes are verified against actual slot mechanics, not intuition.**
-Signals: any diff touching `__gap` or a struct used as a mapping/array value
+Signals: any diff touching `__gap` or a struct used as a mapping's value
 type is justified by a `forge inspect ... storage-layout` diff, not by
 someone's read of the code; a flagged storage diff is never dismissed
-without checking raw slot numbers first.
+without checking raw slot numbers first; a struct used as a dynamic
+array's element type is never resized at all.
 
 **New top-level state variables are only ever appended, and `__gap` tracks them exactly.**
 Signals: `__gap` shrinks by precisely the number of new top-level variables
@@ -63,17 +64,22 @@ on a diamond by default given its added facet-routing complexity.
   operators can tell proxies apart in explorers, Tenderly, and Safe UIs
   without cross-referencing an address book first.
 - Know which state lives in the contract's own sequential slots and which
-  doesn't: a mapping's or dynamic array's value type never occupies the
-  contract's own slots, because each entry is stored at a
-  keccak256-derived location keyed off the mapping's own single anchor
-  slot. Adding, removing, or reordering fields on that value type changes
-  nothing about the contract's own slot count. See
-  `references/storage-layout-slots.md` for the mechanics and a worked
-  example.
+  doesn't, and know that mappings and dynamic arrays are NOT
+  interchangeable here despite looking similar. A mapping's value type
+  never occupies the contract's own slots: each entry is independently
+  stored at a keccak256-derived location keyed off the mapping's own
+  single anchor slot, so growing that value type's struct is safe. A
+  dynamic array's element type is different: elements are packed
+  sequentially starting at a keccak256-derived base, back to back, so
+  changing the element struct's size changes the stride between elements
+  and corrupts every element after the first when read back under the new
+  layout. Never resize a struct used as an array's element type in an
+  upgrade. See `references/storage-layout-slots.md` for the mechanics, a
+  worked mapping example, and a reproduction of the array corruption.
 - Treat `__gap` resizing as tied to top-level variables only: shrink it by
   exactly the number of new top-level state variables an upgrade adds,
-  and never touch it for a change confined to a mapping's or array's value
-  type, no matter how much bigger that type got.
+  and never touch it for a change confined to a mapping's value type, no
+  matter how much bigger that type got.
 - Verify storage-layout reasoning with `forge inspect <Contract>
   storage-layout`, diffed old vs. new, before trusting either "this needs a
   gap shrink" or "this doesn't." The mistake in the anti-patterns below
@@ -106,6 +112,11 @@ on a diamond by default given its added facet-routing complexity.
 - Proxy wrapper contracts hand-copied from a previous deployment and
   manually edited, risking a mismatched `NAME` constant that doesn't match
   the contract's actual filename or purpose.
+- A field added to a struct used as a dynamic array's element type,
+  treated as safe because "it's the same as the mapping case." It isn't:
+  array elements are packed back-to-back, so this shifts the stride
+  between them and corrupts every element after the first when read back
+  under the new layout.
 
 ## Recommended tools and practices (as of 2026-07-29)
 
@@ -130,8 +141,11 @@ on a diamond by default given its added facet-routing complexity.
 ### For: storage-layout changes verified against actual slot mechanics
 
 - Run `forge inspect <Contract> storage-layout`, before and after, on any
-  upgrade touching `__gap` or a struct used inside a mapping/array; diff
-  the slot numbers rather than reasoning from the diff alone.
+  upgrade touching `__gap` or a struct used as a mapping's value type;
+  diff the slot numbers rather than reasoning from the diff alone. For a
+  struct used as an array's element type, don't resize it at all, and
+  treat any diff that does as a blocker regardless of what the slot diff
+  shows.
   `references/storage-layout-slots.md` and its four `assets/StorageLayout*`
   contracts are a reproducible worked example of exactly this check.
 - Use evm-ops's `validate-storage-upgrade` skill/tool for real upgrades: it
@@ -150,6 +164,9 @@ on a diamond by default given its added facet-routing complexity.
   buildable progression showing a mapping-value struct growing safely
   (V1 to V2Good), the same change done wrong (V2Bad), and a genuine new
   top-level variable done right (V3Good).
+- `assets/ArrayElementCorruption.t.sol`: a verified, passing test proving
+  the opposite case, growing a struct used as an array's element type
+  corrupts existing data, unlike the mapping case above.
 - `references/storage-layout-slots.md`: the slot mechanics behind those
   four contracts, with the actual `forge inspect` output and the incident
   that motivated this section.
