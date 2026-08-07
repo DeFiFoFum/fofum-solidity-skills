@@ -28,5 +28,6 @@ what else is available and when each one applies instead.
 ## 3. See it applied
 
 `skills/contract-style/assets/ExampleVault.sol` is a full worked example
-following every convention in the skill; `references/compiling-with-forge.md`
-has the exact commands to build and test it yourself.
+following every convention in the skill;
+`skills/contract-style/references/compiling-with-forge.md` has the exact
+commands to build and test it yourself.
