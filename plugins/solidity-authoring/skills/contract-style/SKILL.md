@@ -114,15 +114,17 @@ receipt; a post-deploy validation script can recompute and diff them.
 
 ## References
 
-- `assets/ExampleVault.sol`: full worked example applying every principle
-  above (feature-first `deposit`/`withdraw` clusters, precise NatSpec,
-  inferred `depositsOpenedAt`) - verified to compile with `forge build`.
-- `assets/ExampleVaultProxy.sol`: the named-proxy wrapper this example is
-  deployed behind. It's generated output, not hand-written.
-- `assets/ExampleVault.t.sol`: Foundry tests for the example above, grouped
-  by feature; 7 tests, verified passing with `forge test`.
-- `references/compiling-with-forge.md`: exact, verified steps to install
-  dependencies and build/test these examples in a real Foundry project.
+- `assets/proof-of-concept/`: a self-contained, runnable Foundry project
+  proving every claim above with real code, not just prose. `make verify`
+  installs pinned dependencies and runs the tests; see its own README for
+  what's proven and by what. `src/ExampleVault.sol` applies feature-first
+  ordering, precise NatSpec, and inferred `depositsOpenedAt`;
+  `src/ExampleVaultProxy.sol` is the named-proxy wrapper it's deployed
+  behind (generated output, not hand-written); `test/ExampleVault.t.sol`
+  has 7 tests, grouped by feature, verified passing.
+- `references/compiling-with-forge.md`: the same setup as a manual
+  walkthrough, for copying individual files into an existing project
+  rather than running the proof-of-concept as-is.
 
 ## Continual improvement
 
