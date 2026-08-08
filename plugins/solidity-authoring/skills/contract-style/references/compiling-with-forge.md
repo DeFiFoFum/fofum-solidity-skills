@@ -1,9 +1,10 @@
 # Compiling the style-guide examples with Foundry
 
-How to drop `assets/ExampleVault.sol`, `assets/ExampleVaultProxy.sol`, and
-`assets/ExampleVault.t.sol` into a real Foundry project and build and test
-them. Every command below was run end to end against
-`OpenZeppelin/openzeppelin-contracts` and
+`assets/proof-of-concept/` is already a complete, runnable Foundry
+project: `cd` into it and run `make verify`. This doc is for the other
+case, copying `ExampleVault.sol`, `ExampleVaultProxy.sol`, and
+`ExampleVault.t.sol` into a project you already have. Every command below
+was run end to end against `OpenZeppelin/openzeppelin-contracts` and
 `OpenZeppelin/openzeppelin-contracts-upgradeable` pinned at `v5.7.0`; no
 submodules are vendored into this skill, only the small example contracts
 themselves.
@@ -42,14 +43,14 @@ doesn't exist yet).
 
 ## 4. Place the files
 
-The example contracts use relative imports (`./ExampleVault.sol`), so keep
-them colocated in the same directory rather than splitting across `src/`
-and `test/`:
+`ExampleVault.t.sol` imports the other two as `../src/ExampleVault.sol`
+and `../src/ExampleVaultProxy.sol`, matching Foundry's standard `src/`
+and `test/` split:
 
 ```bash
-cp <plugin-dir>/skills/contract-style/assets/ExampleVault.sol       src/
-cp <plugin-dir>/skills/contract-style/assets/ExampleVaultProxy.sol  src/
-cp <plugin-dir>/skills/contract-style/assets/ExampleVault.t.sol     src/
+cp <plugin-dir>/skills/contract-style/assets/proof-of-concept/src/ExampleVault.sol       src/
+cp <plugin-dir>/skills/contract-style/assets/proof-of-concept/src/ExampleVaultProxy.sol  src/
+cp <plugin-dir>/skills/contract-style/assets/proof-of-concept/test/ExampleVault.t.sol    test/
 ```
 
 `ExampleVaultProxy.sol` is a pre-generated named-proxy wrapper this example
