@@ -8,6 +8,7 @@ separate from auditing (`solidity-audit`) or operating (`evm-ops`) them.
 | Skill | Purpose |
 |-------|---------|
 | `contract-style` | NatSpec precision, feature-first function ordering, deploy-time value inference |
+| `upgradeable-contracts` | Named-proxy pattern, transparent vs. beacon/diamond choice, storage-layout safety across upgrades |
 
 ## Why a separate plugin
 

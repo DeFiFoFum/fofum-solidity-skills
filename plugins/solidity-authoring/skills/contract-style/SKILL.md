@@ -7,10 +7,11 @@ description: |
   visibility groups, "make the natspec more precise", "don't mention audit issues
   in comments", "feature-first" ordering, writing a deploy script that sets an
   initial timestamp, snapshot, epoch, or starting value. Do NOT use for finding
-  vulnerabilities or writing an audit report (see the solidity-audit plugin);
-  and do NOT use for running deployment, verification, or upgrade tooling
-  itself (see the evm-ops plugin) - this skill is authoring conventions only,
-  not audit or ops execution.
+  vulnerabilities or writing an audit report (see the solidity-audit plugin); do
+  NOT use for running deployment, verification, or upgrade tooling itself (see
+  the evm-ops plugin); and do NOT use for proxy patterns or storage-layout safety
+  on upgradeable contracts (see the sibling upgradeable-contracts skill) - this
+  skill is general authoring conventions, not upgrade-specific ones.
 ---
 
 # Solidity contract style
@@ -21,7 +22,8 @@ Conventions for how contracts in this author's projects get written, not how
 they get audited or operated. Covers comment/NatSpec discipline, function
 ordering inside a contract, and deploy-time value handling. Apply these by
 default when generating or editing `.sol` files unless the project's own
-style guide says otherwise.
+style guide says otherwise. Proxy patterns and storage-layout safety for
+upgradeable contracts live in the sibling `upgradeable-contracts` skill.
 
 ## Outcomes we are looking for
 
@@ -120,8 +122,10 @@ receipt; a post-deploy validation script can recompute and diff them.
   what's proven and by what. `src/ExampleVault.sol` applies feature-first
   ordering, precise NatSpec, and inferred `depositsOpenedAt`;
   `src/ExampleVaultProxy.sol` is the named-proxy wrapper it's deployed
-  behind (generated output, not hand-written); `test/ExampleVault.t.sol`
-  has 7 tests, grouped by feature, verified passing.
+  behind (generated output, not hand-written; see the sibling
+  `upgradeable-contracts` skill for the template and generator it came
+  from); `test/ExampleVault.t.sol` has 7 tests, grouped by feature,
+  verified passing.
 - `references/compiling-with-forge.md`: the same setup as a manual
   walkthrough, for copying individual files into an existing project
   rather than running the proof-of-concept as-is.
