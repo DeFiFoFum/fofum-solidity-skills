@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Generates a NamedProxy contract from ../assets/NamedProxy.template.sol by
+# Generates a NamedProxy contract from
+# ../assets/proof-of-concept/templates/NamedProxy.template.sol by
 # substituting the contract and implementation names. Deterministic: same
 # inputs always produce the same output file.
 #
@@ -54,7 +55,7 @@ for label_and_value in "CONTRACT_NAME:${CONTRACT_NAME}" "IMPLEMENTATION_NAME:${I
 done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE="${SCRIPT_DIR}/../assets/NamedProxy.template.sol"
+TEMPLATE="${SCRIPT_DIR}/../assets/proof-of-concept/templates/NamedProxy.template.sol"
 OUTPUT_FILE="${OUTPUT_DIR}/${CONTRACT_NAME}.sol"
 
 mkdir -p "${OUTPUT_DIR}"
