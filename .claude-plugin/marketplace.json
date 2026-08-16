@@ -27,6 +27,17 @@
       "source": "./plugins/evm-ops",
       "category": "operations",
       "homepage": "https://github.com/DeFiFoFum/fofum-solidity-skills/tree/main/plugins/evm-ops"
+    },
+    {
+      "name": "solidity-authoring",
+      "description": "Authoring conventions for writing Solidity contracts: precise NatSpec, feature-first function ordering, and deploy-time value inference.",
+      "version": "0.1.0",
+      "author": {
+        "name": "DeFiFoFum"
+      },
+      "source": "./plugins/solidity-authoring",
+      "category": "development",
+      "homepage": "https://github.com/DeFiFoFum/fofum-solidity-skills/tree/main/plugins/solidity-authoring"
     }
   ]
 }

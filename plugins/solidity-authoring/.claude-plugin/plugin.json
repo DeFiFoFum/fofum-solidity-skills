@@ -1,0 +1,17 @@
+{
+  "name": "solidity-authoring",
+  "version": "0.1.0",
+  "description": "Authoring conventions for writing Solidity contracts: precise NatSpec, feature-first function ordering, and deploy-time value inference.",
+  "author": {
+    "name": "DeFiFoFum"
+  },
+  "repository": "https://github.com/DeFiFoFum/fofum-solidity-skills",
+  "homepage": "https://github.com/DeFiFoFum/fofum-solidity-skills/tree/main/plugins/solidity-authoring",
+  "license": "MIT",
+  "keywords": [
+    "solidity",
+    "style-guide",
+    "natspec",
+    "conventions"
+  ]
+}
