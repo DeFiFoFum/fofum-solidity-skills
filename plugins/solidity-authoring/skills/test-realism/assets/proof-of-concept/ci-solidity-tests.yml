@@ -1,0 +1,53 @@
+name: solidity-tests
+
+"on":
+  push:
+  pull_request:
+  schedule:
+    # Weekly, not on every push: live-fork and gas/performance tests need a
+    # real RPC, drift as the chain moves, and are too slow/flaky to gate a PR on.
+    - cron: "0 6 * * 1"
+
+jobs:
+  daily:
+    name: fast (vendored bytecode, no RPC)
+    # Runs on every push/PR. Deterministic and network-free: dependencies
+    # backed by real vendored bytecode via vm.etch, not a live fork.
+    # --no-match-contract excludes the fork-tier tests (see ForkWETHTest),
+    # which need an RPC this job deliberately doesn't have.
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: forge test -vvv --no-match-contract ForkWETHTest
+
+  weekly:
+    name: fork + gas (live RPC, scheduled)
+    # Runs only on the cron trigger. This is the "fly like you test" tier:
+    # real live state, real gas costs against real callees. A failure here
+    # is a monitoring signal (the live environment moved), not a merge
+    # gate, so it does not run on push/pull_request. GitHub notifies the
+    # repo's watchers by default on a failed scheduled run; wire up
+    # stronger alerting (Slack, PagerDuty, an auto-filed issue) here if
+    # your project needs it, this template only covers the test split.
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      # Pin to the block queried at the start of THIS run, so the fork
+      # tests and the gas snapshot below see one consistent chain state.
+      # Querying it fresh every run (rather than hardcoding a block) is
+      # what keeps "weekly" meaning "against roughly current state."
+      - name: Pin this run's fork block
+        run: echo "FORK_BLOCK=$(cast block-number --rpc-url ${{ secrets.MAINNET_RPC_URL }})" >> "$GITHUB_ENV"
+      - run: forge test --fork-url ${{ secrets.MAINNET_RPC_URL }} --fork-block-number "$FORK_BLOCK" -vvv
+      - run: forge snapshot --fork-url ${{ secrets.MAINNET_RPC_URL }} --fork-block-number "$FORK_BLOCK" --diff .gas-snapshot
+      # Add a step here per project-specific vendored dependency to refresh
+      # it, e.g.:
+      #   - run: skills/test-realism/scripts/fetch-vendored-bytecode.sh \
+      #       0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 \
+      #       ${{ secrets.MAINNET_RPC_URL }} WETH9 ./vendored
+      # This template doesn't know which contracts your project vendors,
+      # so it isn't wired up by default; see references/vendored-bytecode-setup.md.

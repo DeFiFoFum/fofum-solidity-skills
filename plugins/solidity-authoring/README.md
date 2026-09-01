@@ -9,6 +9,7 @@ separate from auditing (`solidity-audit`) or operating (`evm-ops`) them.
 |-------|---------|
 | `contract-style` | NatSpec precision, feature-first function ordering, deploy-time value inference |
 | `upgradeable-contracts` | Named-proxy pattern, transparent vs. beacon/diamond choice, storage-layout safety across upgrades |
+| `test-realism` | Mock vs. vendored-bytecode vs. live-fork testing tiers; daily CI vs. weekly fork/gas cadence |
 
 ## Why a separate plugin
 

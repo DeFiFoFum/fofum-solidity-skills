@@ -1,0 +1,7 @@
+{
+  "name": "WETH9",
+  "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+  "rpcHost": "ethereum-rpc.publicnode.com",
+  "blockNumber": 25698463,
+  "fetchedAt": "2026-08-06T21:00:30Z"
+}
