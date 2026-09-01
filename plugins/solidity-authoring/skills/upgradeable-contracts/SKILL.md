@@ -126,8 +126,9 @@ on a diamond by default given its added facet-routing complexity.
   per-deployment contract that adds one `string public constant NAME`,
   inlined into bytecode at compile time so it both prevents two proxies
   from verifying as byte-identical contracts and stays readable directly
-  off the deployed proxy. `assets/NamedProxy.template.sol` is this pattern
-  as a template.
+  off the deployed proxy.
+  `assets/proof-of-concept/templates/NamedProxy.template.sol` is this
+  pattern as a template.
 - Generate the wrapper from that template instead of hand-copying an
   existing proxy file per deployment: `scripts/generate-named-proxy.sh
   YourContractProxy YourContract ./src` produces a ready-to-compile file
@@ -146,8 +147,9 @@ on a diamond by default given its added facet-routing complexity.
   struct used as an array's element type, don't resize it at all, and
   treat any diff that does as a blocker regardless of what the slot diff
   shows.
-  `references/storage-layout-slots.md` and its four `assets/StorageLayout*`
-  contracts are a reproducible worked example of exactly this check.
+  `references/storage-layout-slots.md` and its
+  `assets/proof-of-concept/src/StorageLayout*.sol` contracts are a
+  reproducible worked example of exactly this check.
 - Use evm-ops's `validate-storage-upgrade` skill/tool for real upgrades: it
   runs this same class of check mechanically against deployed source, and
   is what actually caught the `__gap` mistake this skill's anti-patterns
@@ -155,23 +157,32 @@ on a diamond by default given its added facet-routing complexity.
 
 ## References
 
-- `assets/NamedProxy.template.sol`: the named-proxy pattern as a template
-  with `{{CONTRACT_NAME}}`/`{{IMPLEMENTATION_NAME}}` placeholders.
+- `assets/proof-of-concept/`: a self-contained, runnable Foundry project
+  proving every claim above with real code, not just prose. `make verify`
+  installs pinned dependencies, runs the real generator script against
+  the template to produce a fresh proxy, and runs the full test suite;
+  see its own README for what's proven and by what. Highlights:
+  - `templates/NamedProxy.template.sol`: the named-proxy pattern as a
+    template with `{{CONTRACT_NAME}}`/`{{IMPLEMENTATION_NAME}}`
+    placeholders.
+  - `src/StorageLayoutV1.sol`, `V2Bad.sol`, `V2Good.sol`, `V3Good.sol`: a
+    buildable progression showing a mapping-value struct growing safely
+    (V1 to V2Good), the same change done wrong (V2Bad), and a genuine new
+    top-level variable done right (V3Good).
+  - `test/MappingValueGrowthIsSafe.t.sol`: seeds real storage, simulates
+    an upgrade with `vm.etch`, and proves the mapping-value case reads
+    back correctly.
+  - `test/ArrayElementCorruption.t.sol`: the same technique proving the
+    opposite (unsafe) array-element case actually corrupts data.
 - `scripts/generate-named-proxy.sh`: generates a named-proxy contract from
   the template; deterministic, no manual editing of generated output.
-- `assets/StorageLayoutV1.sol`, `StorageLayoutV2Bad.sol`,
-  `StorageLayoutV2Good.sol`, `StorageLayoutV3Good.sol`: a verified,
-  buildable progression showing a mapping-value struct growing safely
-  (V1 to V2Good), the same change done wrong (V2Bad), and a genuine new
-  top-level variable done right (V3Good).
-- `assets/ArrayElementCorruption.t.sol`: a verified, passing test proving
-  the opposite case, growing a struct used as an array's element type
-  corrupts existing data, unlike the mapping case above.
-- `references/storage-layout-slots.md`: the slot mechanics behind those
-  four contracts, with the actual `forge inspect` output and the incident
-  that motivated this section.
+  Exercised for real by `assets/proof-of-concept`'s `make generate`.
+- `references/storage-layout-slots.md`: the slot mechanics behind the
+  storage-layout contracts, with the actual `forge inspect` output and
+  the incident that motivated this section.
 - `../contract-style/references/compiling-with-forge.md`: install and
-  remapping steps for building these assets in a real Foundry project.
+  remapping steps for building these assets manually, if not running the
+  proof-of-concept as-is.
 - OpenZeppelin `TransparentUpgradeableProxy`:
   https://docs.openzeppelin.com/contracts/api/proxy#TransparentUpgradeableProxy
 - OpenZeppelin storage gaps pattern:

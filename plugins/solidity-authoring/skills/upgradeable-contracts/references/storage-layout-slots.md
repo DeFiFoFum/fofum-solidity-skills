@@ -16,7 +16,10 @@ lives at `keccak256(abi.encode(key, mappingSlot))`, a location derived from
 that one anchor slot, completely independent of the mapping's value type.
 Growing a struct that's a mapping's value type never changes the
 contract's own slot count, because that struct never had its own reserved
-slots to begin with, and every entry is independently addressed.
+slots to begin with, and every entry is independently addressed. See
+`assets/proof-of-concept/test/MappingValueGrowthIsSafe.t.sol` for a
+runtime proof: it seeds storage, simulates an upgrade, and confirms the
+old data reads back correctly through the new, bigger struct.
 
 `__gap` exists to reserve capacity for genuinely new *top-level* state
 variables in a future upgrade. Shrinking it only makes sense when a diff
@@ -29,10 +32,11 @@ slot, back to back, unlike a mapping's independently-hashed entries.
 Growing a struct used as an *array's element type* changes the stride
 between elements, which corrupts every element after the first when read
 back under the new layout, existing data included. Never resize a struct
-used as an array's element type in an upgrade. See `assets/
-ArrayElementCorruption.t.sol` for a reproduction: it etches a
-bigger-struct contract's bytecode over a smaller-struct contract's
-storage and shows the second array element's fields coming back wrong.
+used as an array's element type in an upgrade. See
+`assets/proof-of-concept/test/ArrayElementCorruption.t.sol` for a
+reproduction: it etches a bigger-struct contract's bytecode over a
+smaller-struct contract's storage and shows the second array element's
+fields coming back wrong.
 
 ## The incident this generalizes from
 
@@ -49,10 +53,16 @@ first-pass manual read had nearly waved it through as a false positive.
 
 ## Reproduce it yourself
 
-The four contracts in `assets/` model exactly this progression. Copy them
-into a Foundry project (see
-`../../contract-style/references/compiling-with-forge.md` for the
-install/remapping steps) and run:
+`assets/proof-of-concept/` is a ready-to-run Foundry project: `cd` into it
+and run `make verify` to install dependencies and run the actual tests
+(`MappingValueGrowthIsSafe.t.sol` and `ArrayElementCorruption.t.sol`),
+proving the runtime behavior directly rather than asking you to trust
+this document.
+
+The `__gap`-sizing claim below is different: it's about compile-time
+storage-layout metadata, not runtime behavior, so there's no pass/fail
+test for it, only `forge inspect`. From inside
+`assets/proof-of-concept/` (after `make setup`), run:
 
 ```bash
 forge inspect StorageLayoutV1 storage-layout
