@@ -61,10 +61,24 @@ interface DiffResult {
 // Constants
 // =============================================================================
 
-const ETHERSCAN_SOURCE_TOOL = path.resolve(
-  import.meta.dir,
-  "../etherscan-source/etherscan-v2-source.ts"
-);
+// This tool delegates source fetching to the etherscan-source tool, which ships
+// in a sibling skill. Skills are installed as siblings by both Claude Code
+// plugins and `npx skills`, so probe the known layouts rather than assuming one.
+const ETHERSCAN_SOURCE_CANDIDATES = [
+  // Explicit override, for non-standard installs
+  process.env.ETHERSCAN_SOURCE_TOOL,
+  // Sibling skill: <skills>/etherscan-source/tools/etherscan-source/...
+  path.resolve(
+    import.meta.dir,
+    "../../../etherscan-source/tools/etherscan-source/etherscan-v2-source.ts"
+  ),
+  // Same tools/ directory, if both tools were vendored side by side
+  path.resolve(import.meta.dir, "../etherscan-source/etherscan-v2-source.ts"),
+].filter((candidate): candidate is string => Boolean(candidate));
+
+const ETHERSCAN_SOURCE_TOOL =
+  ETHERSCAN_SOURCE_CANDIDATES.find((candidate) => fs.existsSync(candidate)) ??
+  ETHERSCAN_SOURCE_CANDIDATES[0]!;
 
 const EXPLORER_URLS: Record<string, string> = {
   "1": "https://etherscan.io",
@@ -225,8 +239,14 @@ async function main(): Promise<void> {
 
   // Verify etherscan source tool exists
   if (!fs.existsSync(ETHERSCAN_SOURCE_TOOL)) {
-    console.error(`Error: etherscan-v2-source.ts not found at ${ETHERSCAN_SOURCE_TOOL}`);
-    console.error("This tool depends on the etherscan-v2-source tool from etherscan-source skill.");
+    console.error("Error: etherscan-v2-source.ts not found. Searched:");
+    for (const candidate of ETHERSCAN_SOURCE_CANDIDATES) {
+      console.error(`  - ${candidate}`);
+    }
+    console.error("");
+    console.error("This tool needs the etherscan-source skill installed alongside it:");
+    console.error("  npx skills add DeFiFoFum/fofum-solidity-skills --skill etherscan-source");
+    console.error("Or set ETHERSCAN_SOURCE_TOOL to the absolute path of the script.");
     process.exit(1);
   }
 

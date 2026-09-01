@@ -10,7 +10,7 @@
     {
       "name": "solidity-audit",
       "description": "Comprehensive smart contract security audit skill. Multi-agent architecture, 100+ item checklist, real exploit references. 100% markdown, zero supply chain risk.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "author": {
         "name": "DeFiFoFum"
       },
@@ -21,6 +21,7 @@
     {
       "name": "evm-ops",
       "description": "EVM smart contract operations toolkit: fetch verified source, generate upgrade diffs, validate storage layouts, build Safe transactions, simulate on Tenderly. Includes Bun-runnable TypeScript tools.",
+      "version": "0.2.0",
       "author": {
         "name": "DeFiFoFum"
       },

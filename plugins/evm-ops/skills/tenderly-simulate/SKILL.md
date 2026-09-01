@@ -19,14 +19,24 @@ Simulates Gnosis Safe transaction batches on Tenderly before multi-signer execut
   ```
 - RPC URL in `.env` for `--safe-tx` mode: `RPC_URL`, `BASE_RPC_URL`, etc.
 
+## Paths
+
+Commands below use `$SKILL_DIR`: the absolute path of the directory containing this SKILL.md. Set it once per shell before running anything:
+
+```bash
+SKILL_DIR=<absolute path to this skill directory>
+```
+
+No dependency install is needed for this tool.
+
 ## Quick Start
 
 ```bash
 # Full Safe execTransaction simulation (default for .safe.json)
-bun run <plugin>/tools/tenderly-simulate/simulate-bundle.ts batch-upgrade.safe.json
+bun run "$SKILL_DIR/tools/tenderly-simulate/simulate-bundle.ts" batch-upgrade.safe.json
 
 # Individual tx simulation
-bun run <plugin>/tools/tenderly-simulate/simulate-bundle.ts --bundle batch-upgrade.safe.json
+bun run "$SKILL_DIR/tools/tenderly-simulate/simulate-bundle.ts" --bundle batch-upgrade.safe.json
 ```
 
 ## Simulation Modes

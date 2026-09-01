@@ -15,7 +15,7 @@ related to non-standard tokens, missing safety checks, and integration bugs.
 ## Focus Areas
 
 ### 1. Weird ERC20 Patterns
-See `resources/weird-tokens.md` for full list.
+See `skills/fofum-audit/resources/weird-tokens.md` for full list.
 
 **High Priority:**
 - Fee-on-transfer tokens
@@ -74,4 +74,4 @@ Deposit credits `amount` instead of actual received...
 
 ## Reference
 
-See `resources/weird-tokens.md` for patterns.
+See `skills/fofum-audit/resources/weird-tokens.md` for patterns.

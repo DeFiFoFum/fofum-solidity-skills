@@ -2,6 +2,10 @@
 name: authoring-skills
 description: Guide for writing high-quality Claude Code skills (SKILL.md files). Use when creating, improving, or reviewing a skill, slash command, or SKILL.md. Covers structure, frontmatter fields, best practices, anti-patterns, and the authoring workflow.
 user-invocable: true
+metadata:
+  # Repo-local authoring aid. Hidden from `npx skills` so it is not
+  # distributed to consumers of this marketplace.
+  internal: true
 ---
 
 ## What Is a Skill?

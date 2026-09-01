@@ -235,9 +235,9 @@ Real exploits with root cause analysis:
 - **Access Control:** `resources/exploits/access-control.md` (Parity, Ronin)
 - **Logic Bugs:** `resources/exploits/logic-bugs.md` (Nomad, Wormhole)
 
-For full Foundry reproductions, see:
-- `submodules/DeFiHackLabs/`
-- `submodules/learn-evm-attacks/`
+For full Foundry reproductions (external repos, not bundled with this skill):
+- <https://github.com/SunWeb3Sec/DeFiHackLabs>
+- <https://github.com/coinspect/learn-evm-attacks>
 
 ---
 

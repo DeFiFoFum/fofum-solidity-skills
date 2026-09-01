@@ -129,4 +129,4 @@ Immediately flag to human if:
 
 ## Output Format
 
-Final deliverable: Markdown audit report following `resources/report-template.md`
+Final deliverable: Markdown audit report following `skills/fofum-audit/resources/report-template.md`

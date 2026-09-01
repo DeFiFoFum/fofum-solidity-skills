@@ -8,6 +8,40 @@ argument-hint: "[--chain <chain>] [--proxy-admin <addr>] [--safe <addr>] [--outp
 
 Orchestrates the full proxy upgrade preparation workflow. Runs all pre-upgrade checks and generates all artifacts needed for safe multi-sig execution.
 
+## Required Sibling Skills
+
+This skill owns no tools. It drives the tools shipped by five sibling skills, which must be installed alongside it:
+
+`contract-diff`, `etherscan-source`, `validate-storage-upgrade`, `safe-tx-builder`, `tenderly-simulate`
+
+```bash
+npx skills add DeFiFoFum/fofum-solidity-skills \
+  --skill upgrade-pipeline --skill contract-diff --skill etherscan-source \
+  --skill validate-storage-upgrade --skill safe-tx-builder --skill tenderly-simulate
+```
+
+## Paths
+
+Commands below use `$SKILLS_DIR`: the directory that holds this skill and its siblings (the parent of the folder containing this SKILL.md).
+
+```bash
+SKILLS_DIR=<absolute path to the parent of this skill directory>
+
+# Preflight: confirm the sibling tools are present before starting
+ls "$SKILLS_DIR"/{contract-diff,etherscan-source,validate-storage-upgrade,safe-tx-builder,tenderly-simulate}
+```
+
+If any are missing, stop and tell the user which skills to install rather than improvising a path.
+
+## Setup (first run only)
+
+Two tools have dependencies. Install them once:
+
+```bash
+cd "$SKILLS_DIR/contract-diff/tools/contract-diff" && bun install
+cd "$SKILLS_DIR/validate-storage-upgrade/tools/validate-storage" && bun install
+```
+
 ## Env Requirements
 
 The following must be set in the project's `.env` (tools search up from cwd automatically):
@@ -37,7 +71,7 @@ Execute these steps in order. Mark each complete before proceeding.
 
 - [ ] **1. Generate contract diffs**
   ```bash
-  bun run ${CLAUDE_SKILL_DIR}/../../tools/contract-diff/generate-contract-diff.ts \
+  bun run "$SKILLS_DIR/contract-diff/tools/contract-diff/generate-contract-diff.ts" \
     --chain <chain> --output <output>/diffs \
     ContractName:0xOLD:0xNEW
   ```
@@ -46,7 +80,7 @@ Execute these steps in order. Mark each complete before proceeding.
 - [ ] **2. Validate storage layout** (for each upgraded contract)
   ```bash
   # Fetch deployed source
-  bun run ${CLAUDE_SKILL_DIR}/../../tools/etherscan-source/etherscan-v2-source.ts \
+  bun run "$SKILLS_DIR/etherscan-source/tools/etherscan-source/etherscan-v2-source.ts" \
     <oldAddr> --chain <chain> --output <output>/sources
 
   # Compile deployed source
@@ -57,14 +91,14 @@ Execute these steps in order. Mark each complete before proceeding.
   forge inspect <Contract.sol:Name> storage-layout --json > storage-deployed.json
   cd <project-root>
   forge inspect <Contract.sol:Name> storage-layout --json > storage-new.json
-  bun run ${CLAUDE_SKILL_DIR}/../../tools/validate-storage/validate-storage.ts \
+  bun run "$SKILLS_DIR/validate-storage-upgrade/tools/validate-storage/validate-storage.ts" \
     <output>/sources/.../storage-deployed.json storage-new.json
   ```
   **Stop if any ERRORS reported.** Warnings are OK to proceed.
 
 - [ ] **3. Build Safe transaction batch**
   ```bash
-  bun run ${CLAUDE_SKILL_DIR}/../../tools/safe-tx-builder/generate-upgrade-tx.ts \
+  bun run "$SKILLS_DIR/safe-tx-builder/tools/safe-tx-builder/generate-upgrade-tx.ts" \
     --network <chain> \
     --proxy-admin <proxyAdmin> \
     --proxy <proxyAddr> \
@@ -76,7 +110,7 @@ Execute these steps in order. Mark each complete before proceeding.
 
 - [ ] **4. Simulate on Tenderly**
   ```bash
-  bun run ${CLAUDE_SKILL_DIR}/../../tools/tenderly-simulate/simulate-bundle.ts \
+  bun run "$SKILLS_DIR/tenderly-simulate/tools/tenderly-simulate/simulate-bundle.ts" \
     <output>/safe-txs/<chain>-upgrade.json
   ```
   **Stop if simulation FAILS.** Debug with `--bundle` mode for per-tx traces.
@@ -88,18 +122,9 @@ Execute these steps in order. Mark each complete before proceeding.
   - Safe TX file: `<output>/safe-txs/<chain>-upgrade.json`
   - Tenderly simulation: link to dashboard
 
-## Setup (first run only)
-
-Tool deps must be installed once in the plugin's own directory (not the project):
-
-```bash
-# Works for both local and global installs: Makefile uses its own absolute path
-make -f ${CLAUDE_SKILL_DIR}/../../Makefile setup
-```
-
 ## Notes on .env Resolution
 
-Tools find `.env` by walking up from `process.cwd()` (the project root where Claude is running). The plugin tools are stored globally but read credentials from the current project's `.env`, no extra configuration needed.
+Tools find `.env` by walking up from `process.cwd()` (the project root where Claude is running). The skills may be installed globally but read credentials from the current project's `.env`, no extra configuration needed.
 
 ## Related Skills
 
