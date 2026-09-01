@@ -55,28 +55,31 @@ vm.etch(target, runtimeCode);
 IWETH9 weth = IWETH9(target);
 ```
 
-See `assets/VendoredWETH.t.sol` for the full working example: 3 tests,
-verified passing with `forge test`, exercising real WETH9 `deposit`,
-`withdraw`, and `transfer` logic with no live RPC needed at test time.
+See `assets/proof-of-concept/test/VendoredWETH.t.sol` for the full working
+example: 3 tests, verified passing with `make verify` (no RPC needed),
+exercising real WETH9 `deposit`, `withdraw`, and `transfer` logic.
 
 ## 5. Refreshing vendored bytecode
 
 Re-run the fetch script deliberately if the real contract is known to have
 upgraded, or on a periodic cadence for contracts you know evolve.
-`assets/ci-solidity-tests.yml`'s weekly job has a commented-out example
-step showing where to add this per project-specific vendored dependency;
-it isn't wired up by default because the template doesn't know which
-contracts your project vendors. Treat an unrefreshed vendored artifact the
-same way you'd treat a `package-lock` that's years old: not wrong by
-default, but worth knowing when it was last true.
+`assets/proof-of-concept`'s `make refresh-vendored RPC_URL=<rpc>` does
+exactly this for real, refetching and diffing against what's committed.
+`ci-solidity-tests.yml`'s weekly job has a commented-out example step
+showing where to wire the same call into CI; it isn't wired up by default
+there because the template doesn't know which contracts your project
+vendors. Treat an unrefreshed vendored artifact the same way you'd treat a
+`package-lock` that's years old: not wrong by default, but worth knowing
+when it was last true.
 
 ## For comparison: the live-fork tier
 
-`assets/ForkWETH.t.sol` runs the same kind of assertions directly against
-whatever `--fork-url` points at, with no vendored file at all:
+`assets/proof-of-concept/test/ForkWETH.t.sol` runs the same kind of
+assertions directly against whatever `--fork-url` points at, with no
+vendored file at all:
 
 ```bash
-forge test --match-contract ForkWETHTest --fork-url https://ethereum-rpc.publicnode.com
+make test-fork RPC_URL=https://ethereum-rpc.publicnode.com
 ```
 
 Verified passing against live mainnet state. This is the higher-realism,

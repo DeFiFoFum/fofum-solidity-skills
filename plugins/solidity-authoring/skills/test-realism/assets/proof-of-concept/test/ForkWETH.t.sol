@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {IWETH9} from "./IWETH9.sol";
+import {IWETH9} from "../src/IWETH9.sol";
 
 /// @notice Demonstrates the live-fork tier: no vendored artifact at all,
 /// calls go straight through to the real deployed WETH9 on whatever chain

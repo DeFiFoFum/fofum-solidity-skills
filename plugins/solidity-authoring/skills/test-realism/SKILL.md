@@ -116,10 +116,11 @@ checking.
 - Fetch a dependency's real deployed runtime bytecode once with
   `scripts/fetch-vendored-bytecode.sh <address> <rpc-url> <name>
   [output-dir]`, and load it in a test with `vm.parseBytes(vm.readFile(...))`
-  plus `vm.etch`. `assets/VendoredWETH.t.sol` is a verified, passing
-  example against real mainnet WETH9 bytecode; `references/
-  vendored-bytecode-setup.md` covers the `fs_permissions` config and the
-  trailing-newline gotcha that actually breaks this in practice.
+  plus `vm.etch`. `assets/proof-of-concept/test/VendoredWETH.t.sol` is a
+  verified, passing example against real mainnet WETH9 bytecode, runnable
+  with `make verify`, no RPC needed; `references/vendored-bytecode-setup.md`
+  covers the `fs_permissions` config and the trailing-newline gotcha that
+  actually breaks this in practice.
 - Use the evm-ops plugin's `etherscan-source`/`sourcify-source` tools when
   you need real deployed *source* (not just runtime bytecode) to compile
   against locally, e.g. to call internal helper logic a bare interface
@@ -128,12 +129,13 @@ checking.
 ### For: full fork/performance tests run on a schedule, not per-PR
 
 - Use `forge test --fork-url <rpc>` in a separate, cron-triggered CI job,
-  not the on-push one. `assets/ci-solidity-tests.yml` is a verified
-  two-job GitHub Actions workflow: `daily` runs vendored-bytecode tests on
-  every push, `weekly` runs live-fork tests and `forge snapshot --diff` on
-  a Monday cron. `assets/ForkWETH.t.sol` is the fork-tier counterpart to
-  the vendored example, verified passing with `--fork-url` against live
-  mainnet.
+  not the on-push one. `assets/proof-of-concept/ci-solidity-tests.yml` is
+  a verified two-job GitHub Actions workflow: `daily` runs
+  vendored-bytecode tests on every push, `weekly` runs live-fork tests and
+  `forge snapshot --diff` on a Monday cron.
+  `assets/proof-of-concept/test/ForkWETH.t.sol` is the fork-tier
+  counterpart to the vendored example, runnable with `make test-fork
+  RPC_URL=<rpc>`, verified passing against live mainnet.
 - Pin and periodically refresh the fork block as part of that scheduled
   job, so "weekly" also means "against roughly current chain state," not
   a block frozen at the job's creation date.
@@ -147,18 +149,26 @@ checking.
 
 ## References
 
+- `assets/proof-of-concept/`: a self-contained, runnable Foundry project
+  proving every claim above with real code, not just prose. `make verify`
+  installs `forge-std` and runs the RPC-free daily tier; `make test-fork
+  RPC_URL=<rpc>` and `make refresh-vendored RPC_URL=<rpc>` exercise the
+  tiers that do need a live RPC, kept out of `verify` on purpose. See its
+  own README for what's proven and by what. Highlights:
+  - `src/IWETH9.sol`: minimal interface used by both example tests.
+  - `test/VendoredWETH.t.sol`: the vendored-bytecode tier, 3 tests
+    verified passing against real mainnet WETH9 bytecode with no RPC at
+    test time.
+  - `vendored/WETH9.runtime.hex` and `WETH9.provenance.json`: the
+    vendored artifact `VendoredWETH.t.sol` loads, with fetch provenance.
+  - `test/ForkWETH.t.sol`: the live-fork tier, 2 tests verified passing
+    with `forge test --fork-url` against real mainnet state.
+  - `ci-solidity-tests.yml`: verified-valid GitHub Actions workflow
+    showing the daily/weekly split described above.
 - `scripts/fetch-vendored-bytecode.sh`: fetches a contract's real deployed
   runtime bytecode from a live RPC and writes it as a vendored artifact
   plus provenance JSON; deterministic, re-run deliberately to refresh.
-- `assets/IWETH9.sol`: minimal interface used by both example tests below.
-- `assets/VendoredWETH.t.sol`: the vendored-bytecode tier, 3 tests verified
-  passing against real mainnet WETH9 bytecode with no RPC at test time.
-- `assets/vendored/WETH9.runtime.hex` and `WETH9.provenance.json`: the
-  vendored artifact `VendoredWETH.t.sol` loads, with fetch provenance.
-- `assets/ForkWETH.t.sol`: the live-fork tier, 2 tests verified passing
-  with `forge test --fork-url` against real mainnet state.
-- `assets/ci-solidity-tests.yml`: verified-valid GitHub Actions workflow
-  showing the daily/weekly split described above.
+  Exercised for real by `assets/proof-of-concept`'s `make refresh-vendored`.
 - `references/vendored-bytecode-setup.md`: exact setup steps, including the
   `fs_permissions` requirement and the trailing-newline gotcha.
 - `../contract-style/references/compiling-with-forge.md`: base Foundry

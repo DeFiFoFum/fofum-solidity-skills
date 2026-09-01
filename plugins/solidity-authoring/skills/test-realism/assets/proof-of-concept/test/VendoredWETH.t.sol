@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {IWETH9} from "./IWETH9.sol";
+import {IWETH9} from "../src/IWETH9.sol";
 
 /// @notice Demonstrates the vendored-bytecode tier: no MockWETH.sol, no live
 /// RPC fork, just the real mainnet WETH9 runtime bytecode (fetched once by
