@@ -8,10 +8,13 @@ Claude Code plugin marketplace for Solidity smart contract development and secur
 |--------|---------|------|
 | [solidity-audit](#solidity-audit) | Smart contract security auditing | 100% Markdown |
 | [evm-ops](#evm-ops) | Live contract operations: diffs, upgrades, simulations | TypeScript tools |
+| [solidity-authoring](#solidity-authoring) | Contract authoring conventions: NatSpec, storage safety, test realism | 100% Markdown |
 
 ---
 
 ## Install
+
+### Claude Code (full plugins: skills, commands, and agents)
 
 ```bash
 # Add this marketplace
@@ -20,9 +23,24 @@ Claude Code plugin marketplace for Solidity smart contract development and secur
 # Install a plugin
 /plugin install solidity-audit@fofum-solidity-skills
 /plugin install evm-ops@fofum-solidity-skills
+/plugin install solidity-authoring@fofum-solidity-skills
 ```
 
 Or use the `/plugin` → **Discover** tab to browse and install.
+
+### Any other agent (Cursor, Codex, Cline, Copilot, Windsurf, and 70+ more)
+
+Every skill here is self-contained, so the [`skills` CLI](https://github.com/vercel-labs/skills) can install it into whichever harness you use:
+
+```bash
+# Pick skills interactively
+npx skills add DeFiFoFum/fofum-solidity-skills
+
+# Or install one non-interactively, globally, for a specific agent
+npx skills add DeFiFoFum/fofum-solidity-skills --skill fofum-solidity-audit -g -a cursor -y
+```
+
+Slash commands and subagents are Claude Code plugin features and do not transfer. The skills themselves, plus their tools, resources, and assets, do.
 
 ---
 
@@ -124,7 +142,30 @@ Validate storage upgrade safety for MyContract against deployed on arbitrum
 /upgrade-pipeline --chain base --proxy-admin 0x... --safe 0x... MyContract:0xOLD:0xNEW
 ```
 
-**Supply chain note:** evm-ops includes TypeScript tools (Bun-runnable). Review `tools/` before installing if supply chain is a concern.
+**Supply chain note:** evm-ops includes TypeScript tools (Bun-runnable). Each tool lives inside the skill that owns it, at `skills/<skill>/tools/`. Review them before installing if supply chain is a concern.
+
+---
+
+## solidity-authoring
+
+Authoring conventions for writing Solidity, separate from auditing it (`solidity-audit`) or operating it (`evm-ops`). 100% Markdown, with example contracts and scripts as skill assets.
+
+**What you get:**
+- `contract-style`: NatSpec precision, feature-first function ordering, deploy-time value inference
+- `upgradeable-contracts`: named-proxy pattern, proxy type selection, storage-layout safety across upgrades
+- `test-realism`: mock vs. vendored-bytecode vs. live-fork testing tiers, and CI cadence
+
+**Quick start:**
+
+```bash
+/plugin install solidity-authoring@fofum-solidity-skills
+```
+
+Then ask Claude:
+
+```
+Write a new upgradeable vault contract following my conventions
+```
 
 ---
 

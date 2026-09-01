@@ -2,6 +2,10 @@
 name: authoring-plugin-marketplaces
 description: Guide for creating and distributing Claude Code plugin marketplaces. Use when creating a marketplace.json, publishing plugins to a team or community, setting up release channels, managing private repos, or configuring strictKnownMarketplaces for enterprise.
 user-invocable: true
+metadata:
+  # Repo-local authoring aid. Hidden from `npx skills` so it is not
+  # distributed to consumers of this marketplace.
+  internal: true
 ---
 
 ## What Is a Plugin Marketplace?

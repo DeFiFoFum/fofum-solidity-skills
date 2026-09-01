@@ -7,7 +7,8 @@
 ## Executive Summary
 
 **Philosophy:**
-- 100% Markdown: no executable code, zero supply chain risk
+- Markdown first: prefer zero executable code, zero supply chain risk
+- Every skill directory is self-contained, so it installs into any harness
 - One marketplace repo → multiple focused plugins
 - Each plugin does ONE thing well
 - Real examples > abstract theory
@@ -15,7 +16,11 @@
 **Key Files:**
 - `marketplace.json`: Plugin registry (root level)
 - `SKILL.md`: Main skill instructions (per plugin)
-- `resources/`: Reference materials Claude reads during tasks
+- `resources/`: Reference materials Claude reads during tasks, inside the skill directory
+
+**Non-negotiable rule: every skill directory is self-contained.** Everything a
+skill reads or runs lives under `skills/{skill-name}/`. Nothing above it. See
+[Self-Contained Skills](#self-contained-skills) for why.
 
 ---
 
@@ -37,21 +42,68 @@
         ├── QUICKSTART.md                # Quick usage guide
         │
         ├── skills/
-        │   └── {skill-name}/
-        │       └── SKILL.md             # Main skill instructions
+        │   └── {skill-name}/            # Self-contained: never reach above this
+        │       ├── SKILL.md             # Main skill instructions
+        │       ├── resources/           # Reference material read on demand
+        │       ├── references/          # Longer-form docs
+        │       ├── assets/              # Example files to copy or adapt
+        │       ├── scripts/             # Shell helpers
+        │       └── tools/               # Executable tools, one dir per tool
+        │           └── {tool-name}/
         │
-        ├── commands/                    # Slash commands (optional)
+        ├── commands/                    # Slash commands (Claude Code only)
         │   └── {command}.md
         │
-        ├── agents/                      # Subagent definitions (optional)
-        │   ├── lead-agent.md
-        │   └── specialist-agent.md
-        │
-        └── resources/                   # Reference materials
-            ├── checklist.md
-            ├── templates/
-            └── examples/
+        └── agents/                      # Subagent definitions (Claude Code only)
+            ├── lead-agent.md
+            └── specialist-agent.md
 ```
+
+---
+
+## Self-Contained Skills
+
+A skill directory must carry everything it needs. No `../`, no plugin-root
+`resources/`, no plugin-root `tools/`.
+
+**Why.** Claude Code installs the whole plugin tree, so a skill can cheat and
+reach up to plugin root. Nothing else does. The [`skills` CLI](https://github.com/vercel-labs/skills)
+(`npx skills`), which installs into Cursor, Codex, Cline, Copilot, Windsurf, and
+70+ other agents, copies **only the skill directory**. Anything above it is
+silently dropped, and the skill ships broken: SKILL.md cites files that are not
+there.
+
+**Rules:**
+
+1. Resources, references, assets, scripts, and tools go inside the skill directory.
+2. SKILL.md references its own files by paths relative to itself. Define an anchor
+   at the top rather than guessing at an install location:
+   ```markdown
+   ## Paths
+
+   Commands below use `$SKILL_DIR`: the absolute path of the directory containing
+   this SKILL.md.
+   ```
+   Do not use `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}` in a SKILL.md. Those
+   are Claude Code plugin variables and are undefined everywhere else. They are
+   fine in `commands/` and `agents/`, which are Claude Code only.
+3. Executable tools resolve sibling paths from their own location
+   (`import.meta.dir`, `$(dirname "$0")`), never from the caller's cwd.
+4. If two skills genuinely need the same tool, one skill owns it and the other
+   declares the dependency: name the required sibling skill in SKILL.md, give the
+   install command, and probe candidate paths at runtime instead of assuming one.
+   Skills install as siblings in both layouts, so `$SKILL_DIR/../{other-skill}/`
+   resolves in each.
+5. Commands and agents do not transfer outside Claude Code. A skill must be
+   useful without them, and should say so if it degrades.
+
+**Verify before publishing:**
+
+```bash
+npx skills add /path/to/this/repo -a claude-code -y   # into a scratch directory
+```
+
+Then check that every path a SKILL.md mentions exists in the installed copy.
 
 ---
 
@@ -131,7 +183,7 @@ Step-by-step process Claude should follow.
 Common patterns, code snippets, examples.
 
 ## Resources
-Links to files in resources/ folder.
+Links to files in this skill's resources/ folder, by path relative to SKILL.md.
 
 ## Ready to Start
 What Claude should ask for before beginning.
@@ -141,11 +193,11 @@ What Claude should ask for before beginning.
 
 ## Design Principles
 
-### 1. Markdown Only
-- No JavaScript, Python, or executable code
-- No npm packages or dependencies
+### 1. Markdown First
+- Prefer pure Markdown: no dependencies, safe to install without code review
+- When a skill genuinely needs executable tools, they live in
+  `skills/{skill}/tools/{tool}/` and the plugin README flags the supply chain
 - No hooks that run code
-- Safe to install without code review
 
 ### 2. Single Responsibility
 - Each plugin does ONE thing well
@@ -154,8 +206,8 @@ What Claude should ask for before beginning.
 
 ### 3. Progressive Disclosure
 - SKILL.md = high-level methodology
-- resources/ = detailed reference (loaded on demand)
-- submodules/ = external databases (optional)
+- skills/{skill}/resources/ = detailed reference (loaded on demand)
+- External repos = large databases, linked by URL rather than bundled
 
 ### 4. Real Examples
 - Link to actual exploits, not theoretical patterns
@@ -171,7 +223,9 @@ What Claude should ask for before beginning.
 
 ## Agents (Multi-Agent Architecture)
 
-For complex tasks, define specialized agents in `agents/`:
+For complex tasks, define specialized agents in `agents/` at plugin root. These
+are Claude Code only: they do not transfer when a skill is installed with
+`npx skills`, so the skill must still work without them.
 
 ```markdown
 # agents/lead-auditor.md
@@ -209,6 +263,8 @@ Return findings as JSON...
 ---
 
 ## Resources Organization
+
+Always inside the skill directory, `skills/{skill-name}/resources/`:
 
 ```
 resources/
