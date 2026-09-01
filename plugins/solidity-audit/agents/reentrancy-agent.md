@@ -157,7 +157,7 @@ Apply CEI pattern or add ReentrancyGuard.
 
 ## Reference
 
-See `resources/exploits/reentrancy.md` for real-world examples:
+See `skills/fofum-audit/resources/exploits/reentrancy.md` for real-world examples:
 - The DAO hack
 - Cream Finance
 - Fei/Ondo

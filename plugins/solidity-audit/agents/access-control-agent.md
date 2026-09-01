@@ -196,7 +196,7 @@ function setOracle(address _oracle) external onlyOwner {
 
 ## Reference
 
-See `resources/exploits/access-control.md` for examples:
+See `skills/fofum-audit/resources/exploits/access-control.md` for examples:
 - Parity Wallet hack
 - Ronin Bridge
 - Various unprotected initialize() exploits

@@ -1,6 +1,6 @@
 {
   "name": "solidity-audit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Comprehensive Solidity smart contract security audit skill with exploit patterns, protocol-specific checklists, and structured methodology. 100% markdown, zero supply chain risk.",
   "author": {
     "name": "DeFiFoFum"

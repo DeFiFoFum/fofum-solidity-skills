@@ -53,28 +53,41 @@ Or use the slash command:
 ## What's Included
 
 ```
-fofum-solidity-audit-skill/
+solidity-audit/
 ├── skills/fofum-audit/
-│   └── SKILL.md              # Main skill with methodology
-├── commands/
+│   ├── SKILL.md              # Main skill with methodology
+│   └── resources/            # Read on demand by the skill
+│       ├── checklist.md      # 100+ item checklist with SWC IDs
+│       ├── severity.md       # Impact × Likelihood matrix
+│       ├── report-template.md # Professional report format
+│       ├── weird-tokens.md   # Fee-on-transfer, rebasing, etc.
+│       ├── protocols/        # Protocol-specific guides
+│       │   ├── lending.md
+│       │   ├── amm.md
+│       │   └── ...
+│       └── exploits/         # Real exploit breakdowns
+│           ├── reentrancy.md
+│           ├── oracle.md
+│           └── ...
+├── commands/                 # Claude Code only
 │   └── audit.md              # /audit slash command
-├── resources/
-│   ├── checklist.md          # 100+ item checklist with SWC IDs
-│   ├── severity.md           # Impact × Likelihood matrix
-│   ├── report-template.md    # Professional report format
-│   ├── weird-tokens.md       # Fee-on-transfer, rebasing, etc.
-│   ├── protocols/            # Protocol-specific guides
-│   │   ├── lending.md
-│   │   ├── amm.md
-│   │   └── ...
-│   └── exploits/             # Real exploit breakdowns
-│       ├── reentrancy.md
-│       ├── oracle.md
-│       └── ...
-└── submodules/
-    ├── DeFiHackLabs/         # 100+ Foundry exploit reproductions
-    └── learn-evm-attacks/    # Documented attack patterns
+└── agents/                   # Claude Code only
+    ├── lead-auditor.md
+    └── ...                   # 5 specialist reviewers
 ```
+
+Resources live inside the skill directory so the skill stays self-contained: it
+works installed as a Claude Code plugin or on its own via `npx skills`.
+
+## Install Outside Claude Code
+
+```bash
+npx skills add DeFiFoFum/fofum-solidity-skills --skill fofum-solidity-audit
+```
+
+This installs the skill and its resources into any supported agent. The `/audit`
+command and the six specialist subagents are Claude Code plugin features and do
+not transfer; the skill runs the same methodology in a single context without them.
 
 ## Methodology
 

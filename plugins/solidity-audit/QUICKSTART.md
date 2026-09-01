@@ -7,24 +7,24 @@ Get auditing in 5 minutes.
 ### Option A: Claude Code Plugin (Recommended)
 
 ```bash
-# Add as plugin
-claude /plugin install /path/to/fofum-solidity-audit-skill
-
-# Or if published to marketplace
-/plugin marketplace add defifofum/fofum-solidity-audit-skill
-/plugin install fofum-solidity-audit-skill
+/plugin marketplace add DeFiFoFum/fofum-solidity-skills
+/plugin install solidity-audit@fofum-solidity-skills
 ```
 
-### Option B: Clone Locally
+### Option B: Any Other Agent
 
 ```bash
-git clone https://github.com/defifofum/fofum-solidity-audit-skill
-cd fofum-solidity-audit-skill
+npx skills add DeFiFoFum/fofum-solidity-skills --skill fofum-solidity-audit
 ```
 
-Then point Claude Code at it:
+Works for Cursor, Codex, Cline, Copilot, Windsurf, and 70+ others. Pick the target
+with `-a <agent>`, or `-g` to install globally.
+
+### Option C: Clone Locally
+
 ```bash
-claude --plugin-dir /path/to/fofum-solidity-audit-skill
+git clone https://github.com/DeFiFoFum/fofum-solidity-skills
+claude --plugin-dir /path/to/fofum-solidity-skills/plugins/solidity-audit
 ```
 
 ---
@@ -223,6 +223,6 @@ pip install slither-analyzer
 ## Next Steps
 
 - Read `SKILL.md` for full methodology
-- Check `resources/checklist.md` for all 100+ items
+- Check the skill's `resources/checklist.md` for all 100+ items
 - Browse `upstream/DeFiHackLabs/` for exploit examples
 - Customize agents in `agents/` for your needs

@@ -188,7 +188,7 @@ require(updatedAt >= block.timestamp - 1 hours, "Stale price");
 
 ## Reference
 
-See `resources/exploits/oracle.md` for examples:
+See `skills/fofum-audit/resources/exploits/oracle.md` for examples:
 - Harvest Finance
 - Mango Markets
 - bZx attacks
