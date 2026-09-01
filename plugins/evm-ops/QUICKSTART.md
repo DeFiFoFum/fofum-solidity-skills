@@ -8,10 +8,20 @@ curl -fsSL https://bun.sh/install | bash
 
 ## 2. Install tool dependencies
 
+As a Claude Code plugin (installs deps for every tool at once):
+
 ```bash
-# Works for both local and global installs
 make -f <path-to-plugin>/Makefile setup
 ```
+
+As standalone skills installed with `npx skills`, install per skill:
+
+```bash
+cd <skills-dir>/contract-diff/tools/contract-diff && bun install
+cd <skills-dir>/validate-storage-upgrade/tools/validate-storage && bun install
+```
+
+The other tools have no dependencies to install.
 
 ## 3. Configure credentials
 

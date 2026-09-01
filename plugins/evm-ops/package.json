@@ -21,6 +21,6 @@
     "claude-code-plugin"
   ],
   "scripts": {
-    "install:all": "for dir in tools/*/; do (cd \"$dir\" && bun install); done"
+    "install:all": "for dir in skills/*/tools/*/; do (cd \"$dir\" && bun install); done"
   }
 }

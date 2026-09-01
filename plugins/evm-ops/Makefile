@@ -1,8 +1,15 @@
 # evm-ops Plugin - Makefile
-# Install and manage tool dependencies
+# Install and manage tool dependencies.
+#
+# Only useful for Claude Code plugin installs, where the whole plugin tree is
+# present. When skills are installed individually with `npx skills`, follow the
+# per-skill setup instructions in each SKILL.md instead.
 
 PLUGIN_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-TOOLS := contract-diff validate-storage sourcify-source check-forge safe-tx-builder tenderly-simulate etherscan-source
+# Tools live inside the skill that owns them: skills/<skill>/tools/<tool>/
+TOOL_DIRS := $(wildcard $(PLUGIN_DIR)skills/*/tools/*/)
+# Tools with real dependencies to install
+DEP_TOOLS := skills/contract-diff/tools/contract-diff skills/validate-storage-upgrade/tools/validate-storage
 
 .PHONY: help setup setup-env install verify clean
 
@@ -16,14 +23,14 @@ help:
 	@echo ""
 	@echo "Plugin installed at: $(PLUGIN_DIR)"
 
-# Install bun deps for all tools that need them
+# Install bun deps for every tool that ships a package.json
 setup:
 	@echo "Installing tool dependencies..."
 	@echo ""
-	@for tool in $(TOOLS); do \
-		if [ -f "$(PLUGIN_DIR)tools/$$tool/package.json" ]; then \
+	@for tool in $(TOOL_DIRS); do \
+		if [ -f "$$tool/package.json" ]; then \
 			echo "  → $$tool"; \
-			(cd "$(PLUGIN_DIR)tools/$$tool" && bun install --silent 2>/dev/null || bun install); \
+			(cd "$$tool" && bun install --silent 2>/dev/null || bun install); \
 		fi; \
 	done
 	@echo ""
@@ -54,8 +61,8 @@ verify:
 	@command -v forge >/dev/null 2>&1 && echo "  ✅ forge $(shell forge --version 2>/dev/null | head -1)" || echo "  ❌ forge not found: curl -L https://foundry.paradigm.xyz | bash && foundryup"
 	@command -v cast >/dev/null 2>&1 && echo "  ✅ cast" || echo "  ❌ cast not found (install Foundry)"
 	@echo ""
-	@for tool in contract-diff validate-storage; do \
-		if [ -d "$(PLUGIN_DIR)tools/$$tool/node_modules" ]; then \
+	@for tool in $(DEP_TOOLS); do \
+		if [ -d "$(PLUGIN_DIR)$$tool/node_modules" ]; then \
 			echo "  ✅ $$tool deps installed"; \
 		else \
 			echo "  ❌ $$tool deps missing: run make setup"; \
@@ -64,7 +71,7 @@ verify:
 
 # Remove all node_modules
 clean:
-	@for tool in $(TOOLS); do \
-		rm -rf "$(PLUGIN_DIR)tools/$$tool/node_modules"; \
+	@for tool in $(TOOL_DIRS); do \
+		rm -rf "$$tool/node_modules"; \
 	done
 	@echo "Cleaned node_modules from all tools."

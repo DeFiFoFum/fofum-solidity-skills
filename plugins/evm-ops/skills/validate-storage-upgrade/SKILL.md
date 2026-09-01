@@ -13,13 +13,32 @@ Validates that upgradeable Solidity contracts maintain storage layout compatibil
 - Compiled contracts in the project
 - For on-chain validation: `ETHERSCAN_V2_API_KEY` in `.env`
 
+## Paths
+
+Commands below use `$SKILL_DIR`: the absolute path of the directory containing this SKILL.md. Set it once per shell before running anything:
+
+```bash
+SKILL_DIR=<absolute path to this skill directory>
+
+# Install deps (first time)
+cd "$SKILL_DIR/tools/validate-storage" && bun install
+```
+
 ## Tools Available
+
+All paths are relative to `$SKILL_DIR`.
 
 | Tool | Purpose |
 |------|---------|
 | `tools/validate-storage/validate-storage.ts` | Compare storage layouts, report errors and warnings |
 | `tools/check-forge/check-forge.ts` | Verify Forge installation and version |
 | `tools/sourcify-source/sourcify-source.ts` | Fetch source from Sourcify (no API key needed) |
+
+For Etherscan-based fetching (Workflow B), install the sibling `etherscan-source` skill:
+
+```bash
+npx skills add DeFiFoFum/fofum-solidity-skills --skill etherscan-source
+```
 
 ## Workflow A: Local Version Comparison
 
@@ -31,14 +50,14 @@ forge inspect contracts/MyContract.sol:MyContract storage-layout --json > storag
 forge inspect contracts/MyContract.sol:MyContract storage-layout --json > storage-after.json
 
 # 3. Validate
-bun run <plugin>/tools/validate-storage/validate-storage.ts storage-before.json storage-after.json
+bun run "$SKILL_DIR/tools/validate-storage/validate-storage.ts" storage-before.json storage-after.json
 ```
 
 ## Workflow B: Validate Against Deployed Contract (Recommended)
 
 ```bash
 # 1. Fetch deployed source
-bun run <plugin>/tools/etherscan-source/etherscan-v2-source.ts <address> --chain <chain>
+bun run "$SKILL_DIR/../etherscan-source/tools/etherscan-source/etherscan-v2-source.ts" <address> --chain <chain>
 
 # 2. Compile deployed source
 cd .temp/<chainId>/<address>/implementation-<date>/
@@ -51,7 +70,7 @@ forge inspect contracts/MyContract.sol:MyContract storage-layout --json > storag
 cd /your/project && forge inspect contracts/MyContract.sol:MyContract storage-layout --json > storage-after.json
 
 # 5. Validate
-bun run <plugin>/tools/validate-storage/validate-storage.ts storage-deployed.json storage-after.json
+bun run "$SKILL_DIR/tools/validate-storage/validate-storage.ts" storage-deployed.json storage-after.json
 ```
 
 ## Interpreting Results

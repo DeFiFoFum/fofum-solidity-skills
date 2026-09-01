@@ -16,7 +16,7 @@ Check all prerequisites for evm-ops.
 - [ ] `ETHERSCAN_V2_API_KEY` set in `.env`
 - [ ] `TENDERLY_USER`, `TENDERLY_PROJECT`, `TENDERLY_ACCESS_KEY` set in `.env`
 - [ ] RPC URL configured (`RPC_URL` or chain-specific variant)
-- [ ] Tool deps installed in plugin directory (not project): run `make -f ${CLAUDE_SKILL_DIR}/../Makefile verify`
+- [ ] Tool deps installed in the plugin directory (not the project): run `make -f ${CLAUDE_PLUGIN_ROOT}/Makefile verify`
 
 ## Fix Instructions
 
@@ -26,7 +26,7 @@ Check all prerequisites for evm-ops.
 
 **Missing tool deps** (works for both local and global plugin installs):
 ```bash
-make -f ${CLAUDE_SKILL_DIR}/../Makefile setup
+make -f ${CLAUDE_PLUGIN_ROOT}/Makefile setup
 ```
 
 **Missing API keys:** add to project `.env`:

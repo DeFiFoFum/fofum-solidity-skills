@@ -19,14 +19,22 @@ Fetches verified contract source code from Etherscan V2 API and saves it in a st
 - **Etherscan V2 API key** in `.env` as `ETHERSCAN_V2_API_KEY`
 - Contract must be verified on Etherscan
 
+## Paths
+
+Commands below use `$SKILL_DIR`: the absolute path of the directory containing this SKILL.md. Set it once per shell before running anything:
+
+```bash
+SKILL_DIR=<absolute path to this skill directory>
+```
+
 ## Quick Start
 
 ```bash
 # Install deps (first time)
-cd <plugin>/tools/etherscan-source && bun install
+cd "$SKILL_DIR/tools/etherscan-source" && bun install
 
 # Fetch source
-bun run <plugin>/tools/etherscan-source/etherscan-v2-source.ts \
+bun run "$SKILL_DIR/tools/etherscan-source/etherscan-v2-source.ts" \
   <address> --chain <chainId|name> [--output <dir>]
 ```
 

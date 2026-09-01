@@ -15,11 +15,21 @@ Generates JSON files compatible with Gnosis Safe's Transaction Builder app for p
 - New implementation address (newly deployed)
 - Safe address (multi-sig owner of the ProxyAdmin)
 
+## Paths
+
+Commands below use `$SKILL_DIR`: the absolute path of the directory containing this SKILL.md. Set it once per shell before running anything:
+
+```bash
+SKILL_DIR=<absolute path to this skill directory>
+```
+
+No dependency install is needed for this tool.
+
 ## Quick Start
 
 ```bash
 # Single upgrade
-bun run <plugin>/tools/safe-tx-builder/generate-upgrade-tx.ts \
+bun run "$SKILL_DIR/tools/safe-tx-builder/generate-upgrade-tx.ts" \
   --network base \
   --proxy-admin 0x<ProxyAdmin> \
   --proxy 0x<Proxy> \
@@ -28,7 +38,7 @@ bun run <plugin>/tools/safe-tx-builder/generate-upgrade-tx.ts \
   --output ./safe-txs/base-mycontract-upgrade.json
 
 # From config file (batch multiple upgrades)
-bun run <plugin>/tools/safe-tx-builder/generate-upgrade-tx.ts --config upgrades.json
+bun run "$SKILL_DIR/tools/safe-tx-builder/generate-upgrade-tx.ts" --config upgrades.json
 ```
 
 ## CLI Options

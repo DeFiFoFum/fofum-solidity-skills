@@ -18,15 +18,28 @@ Generates color-coded, side-by-side HTML diffs comparing old (deployed) vs new i
 - **Bun** installed
 - **Etherscan API key** in `.env` as `ETHERSCAN_V2_API_KEY`
 - Contracts must be verified on Etherscan
+- The **`etherscan-source` skill** installed alongside this one (source fetching is delegated to its tool):
+  ```bash
+  npx skills add DeFiFoFum/fofum-solidity-skills --skill etherscan-source
+  ```
+  Both skills install as siblings, so the tool is found automatically. Override with `ETHERSCAN_SOURCE_TOOL=<abs path>` for non-standard layouts.
+
+## Paths
+
+Commands below use `$SKILL_DIR`: the absolute path of the directory containing this SKILL.md. Set it once per shell before running anything:
+
+```bash
+SKILL_DIR=<absolute path to this skill directory>
+```
 
 ## Quick Start
 
 ```bash
 # Install deps (first time)
-cd <plugin>/tools/contract-diff && bun install
+cd "$SKILL_DIR/tools/contract-diff" && bun install
 
 # Generate diffs
-bun run <plugin>/tools/contract-diff/generate-contract-diff.ts \
+bun run "$SKILL_DIR/tools/contract-diff/generate-contract-diff.ts" \
   --chain base \
   --output upgrades/base/20260519-diffs \
   PriceFeedV2:0xOLD...:0xNEW... \
@@ -61,9 +74,9 @@ Options:
 
 ## How It Works
 
-1. Spawns `etherscan-v2-source.ts` to fetch source for each address
+1. Spawns `etherscan-v2-source.ts` from the sibling `etherscan-source` skill to fetch source for each address
 2. Runs `diff -ru` recursively across ALL `.sol` files (captures parent/inherited contracts)
-3. Renders HTML using `diff2html` (vendored in `lib/d_code-diff/`)
+3. Renders HTML using `diff2html` (vendored in this skill's `lib/d_code-diff/`)
 
 ## Supported Chains
 
